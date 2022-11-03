@@ -124,11 +124,18 @@ export default function HomeScreen({navigation}) {
             // fixed
             spacing={10}
             renderItem={({item}) => (
-              <ImageBackground
-                source={{uri: `${item?.cat_img}`}}
-                style={styles.itemContainer}>
-                <Text style={styles.itemName}>{item.title}</Text>
-              </ImageBackground>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('Sub-Category', {id: item._id})
+                }>
+                <ImageBackground
+                  source={{uri: `${item?.cat_img}`}}
+                  style={styles.itemContainer}>
+                  <View style={styles.itemView}>
+                    <Text style={styles.itemName}>{item.title}</Text>
+                  </View>
+                </ImageBackground>
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -300,20 +307,22 @@ const styles = StyleSheet.create({
   },
   //grid View
   gridView: {
-    marginTop: 5,
+    marginTop: 10,
     flex: 1,
   },
   itemContainer: {
-    justifyContent: 'flex-end',
-    borderRadius: 20,
-    padding: 10,
     height: 150,
-    width: 150,
-    display: 'flex',
+  },
+  itemView: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
   },
   itemName: {
     fontSize: 16,
-    color: '#000',
+    color: '#FFF',
     fontWeight: '600',
+    margin: 10,
   },
 });

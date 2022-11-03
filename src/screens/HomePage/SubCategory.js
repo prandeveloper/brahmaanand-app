@@ -5,40 +5,56 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ImageBackground,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
+import axios from 'axios';
 
-const SubCategory = () => {
-  const [items, setItems] = React.useState([
-    {name: 'SUB-CATEGORY', code: '#1abc9c'},
-    {name: 'SUB-CATEGORY', code: '#2ecc71'},
-    {name: 'SUB-CATEGORY', code: '#3498db'},
-    {name: 'SUB-CATEGORY', code: '#9b59b6'},
-    {name: 'SUB-CATEGORY', code: '#34495e'},
-    {name: 'SUB-CATEGORY', code: '#16a085'},
-    {name: 'SUB-CATEGORY', code: '#27ae60'},
-    {name: 'SUB-CATEGORY', code: '#2980b9'},
-  ]);
+const SubCategory = ({route, navigation}) => {
+  const {id} = route.params;
+  console.log(id);
+  const [items, setItems] = useState([]);
+
+  const getCategory = () => {
+    axios
+      .get(`http://43.205.82.226:9000/admin/listbycategory/${id}`)
+      .then(response => {
+        //console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <FlatGrid
-          itemDimension={130}
-          data={items}
-          style={styles.gridView}
-          //staticDimension={350}
-          //fixed
-          spacing={10}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={[styles.itemContainer, {backgroundColor: item.code}]}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemCode}>{item.code}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      </ScrollView>
+    <SafeAreaView style={{flex: 1}}>
+      <FlatGrid
+        itemDimension={130}
+        data={items}
+        style={styles.gridView}
+        //staticDimension={350}
+        //fixed
+        spacing={10}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Resource List', {id: item._id})
+            }>
+            <ImageBackground
+              source={{uri: `${item?.Subcat_img}`}}
+              style={styles.itemContainer}>
+              <View style={styles.itemView}>
+                <Text style={styles.itemName}>{item.title}</Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        )}
+      />
     </SafeAreaView>
   );
 };
@@ -51,15 +67,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    justifyContent: 'flex-end',
-    borderRadius: 5,
-    padding: 10,
     height: 150,
+  },
+  itemView: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
   },
   itemName: {
     fontSize: 16,
-    color: '#fff',
+    color: '#FFF',
     fontWeight: '600',
+    margin: 10,
   },
   itemCode: {
     fontWeight: '600',

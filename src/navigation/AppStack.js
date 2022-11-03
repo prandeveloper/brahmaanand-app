@@ -28,6 +28,9 @@ import CategoryList from '../screens/HomePage/CategoryList';
 import SubCategory from '../screens/HomePage/SubCategory';
 import AllBlog from '../screens/blogPage/AllBlog';
 import BlogDetail from '../screens/blogPage/BlogDetail';
+import ResourceList from '../screens/HomePage/ResourceList';
+import ResourceDetail from '../screens/HomePage/ResourceDetail';
+import ProfileView from '../screens/settingPages/ProfileView';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -76,6 +79,16 @@ const HomeStack = () => {
         options={{headerShown: true}}
       />
       <Stack.Screen
+        name="Resource List"
+        component={ResourceList}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Resource Detail"
+        component={ResourceDetail}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
         name="Blogs"
         component={AllBlog}
         options={{headerShown: true}}
@@ -101,6 +114,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="Setting"
         component={Setting}
+        options={({route}) => ({
+          title: route.params?.title,
+        })}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileView}
         options={({route}) => ({
           title: route.params?.title,
         })}

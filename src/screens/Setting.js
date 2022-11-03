@@ -122,7 +122,7 @@ const Setting = ({navigation}) => {
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate('My Profile')}>
+            onPress={() => navigation.navigate('Profile')}>
             <View style={styles.eachSection}>
               <Ionicons
                 name="person-sharp"
