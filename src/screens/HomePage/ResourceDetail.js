@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,27 +10,166 @@ import {
   FlatList,
   Button,
 } from 'react-native';
+import axios from 'axios';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ResourceDetail = ({route, navigation}) => {
+  const {id} = route.params;
+  const [items, setItems] = useState({});
+
+  const getResourceDetail = () => {
+    axios
+      .get(`http://43.205.82.226:9000/admin/getone_reslist/${id}`)
+      .then(response => {
+        console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getResourceDetail();
+  }, []);
+  console.log(id);
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{alignItems: 'center', marginHorizontal: 30}}>
+        <View style={{alignItems: 'center', marginHorizontal: 5}}>
           <Image
             style={styles.productImg}
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3v7KDJN7TAoJa5sFaPWcp1HX8JFcpF3z5K3ngz4L6kWoEP7Ca',
+              uri: `${items.img}`,
             }}
           />
-          <Text style={styles.name}>Super Soft T-Shirt</Text>
+          <Text style={styles.name}>{items?.resTitle}</Text>
           {/* <Text style={styles.price}>$ 12.22</Text> */}
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-            commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-            penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-            Donec quam felis, ultricies nec
-          </Text>
+          <Text style={styles.description}>{items?.res_desc}</Text>
         </View>
+
+        <View style={styles.contentColors}>
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="logo-buffer" color={'#4095FF'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Creator:</Text>
+              <Text style={styles.subText1}>{items?.creatorName}</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="person-circle" color={'#BB43A8'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Submitted by:</Text>
+              <Text style={styles.subText1}>{items?.creatorName}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.contentColors}>
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="open" color={'#FC9357'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Type:</Text>
+              <Text style={[styles.subText, {color: '#FC9357'}]}>
+                {items?.type}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="videocam" color={'#DB47FE'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Format:</Text>
+              <Text style={[styles.subText, {color: '#DB47FE'}]}>
+                {items?.format}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="cube" color={'#5F56C6'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Category:</Text>
+              <Text style={[styles.subText, {color: '#5F56C6'}]}>
+                {items?.category?.title}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.contentColors}>
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="calendar" color={'#FF6262'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Year:</Text>
+              {items?.relYear?.map(year => (
+                <Text
+                  style={[styles.subText, {color: '#FF6262'}]}
+                  key={year._id}>
+                  {year.yrName}
+                </Text>
+              ))}
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="stats-chart" color={'#FFA841'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Rating:</Text>
+              <Text style={[styles.subText, {color: '#FFA841'}]}>
+                {items?.creatorName}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="paper-plane" color={'#4095FF'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Submitted::</Text>
+              <Text style={[styles.subText, {color: '#FC9357'}]}>
+                {items?.createdAt}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.contentColors}>
+          <TouchableOpacity style={styles.btnColor}>
+            <View style={styles.iconView}>
+              <Ionicons name="people" color={'#0ACD92'} size={25} />
+            </View>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Language </Text>
+              <View style={{flexDirection: 'row'}}>
+                {items?.language?.map(lang => (
+                  <Text
+                    style={[styles.subText, {color: '#0ACD92'}]}
+                    key={lang._id}>
+                    {lang.language},
+                  </Text>
+                ))}
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.starContainer}>
           <Image
             style={styles.star}
@@ -53,38 +192,6 @@ const ResourceDetail = ({route, navigation}) => {
             source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
           />
         </View>
-        {/* <View style={styles.contentColors}>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#00BFFF'},
-            ]}></TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#FF1493'},
-            ]}></TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#00CED1'},
-            ]}></TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#228B22'},
-            ]}></TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#20B2AA'},
-            ]}></TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.btnColor,
-              {backgroundColor: '#FF4500'},
-            ]}></TouchableOpacity>
-        </View> */}
         {/* <View style={styles.contentSize}>
           <TouchableOpacity style={styles.btnSize}>
             <Text>S</Text>
@@ -120,13 +227,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   productImg: {
-    width: 200,
+    width: '100%',
     height: 200,
   },
   name: {
-    fontSize: 28,
-    color: '#696969',
+    fontSize: 20,
+    color: '#000',
     fontWeight: 'bold',
+    marginTop: 5,
   },
   price: {
     marginTop: 10,
@@ -137,17 +245,47 @@ const styles = StyleSheet.create({
   description: {
     textAlign: 'center',
     marginTop: 10,
-    color: '#696969',
+    color: '#000',
   },
   star: {
     width: 40,
     height: 40,
   },
+  contentColors: {
+    justifyContent: 'center',
+    marginHorizontal: 10,
+    flexDirection: 'row',
+    marginTop: 20,
+  },
   btnColor: {
-    height: 30,
-    width: 30,
-    borderRadius: 30,
+    flex: 1,
     marginHorizontal: 3,
+    flexDirection: 'row',
+    elevation: 1,
+    padding: 2,
+  },
+  iconView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
+  textView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  headText: {
+    color: '#000',
+    fontWeight: '600',
+    margin: 1,
+  },
+  subText1: {
+    color: '#000',
+    fontWeight: '700',
+    margin: 1,
+  },
+  subText: {
+    fontWeight: '700',
+    margin: 1,
   },
   btnSize: {
     height: 40,
@@ -168,12 +306,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 20,
   },
-  contentColors: {
-    justifyContent: 'center',
-    marginHorizontal: 30,
-    flexDirection: 'row',
-    marginTop: 20,
-  },
+
   contentSize: {
     justifyContent: 'center',
     marginHorizontal: 30,

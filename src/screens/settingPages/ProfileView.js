@@ -12,12 +12,6 @@ import {
 
 //import {Feather as Icon} from '@expo/vector-icons';
 
-// Fonts
-// import {useFonts} from 'expo-font';
-// import SSLight from '../../assets/fonts/SourceSansPro/SourceSansProLight.ttf';
-// import SSRegular from '../../assets/fonts/SourceSansPro/SourceSansProRegular.ttf';
-// import SSBold from '../../assets/fonts/SourceSansPro/SourceSansProBold.ttf';
-
 function Photos({photos}) {
   const imgWidth = Dimensions.get('screen').width * 0.33333;
   return (
@@ -33,7 +27,7 @@ function Photos({photos}) {
             <Image
               style={{width: imgWidth, height: imgWidth}}
               source={{
-                uri: `https://picsum.photos/200/300?random=${index + 1}`,
+                uri: `https://img.freepik.com/free-photo/breathtaking-shot-beautiful-stones-turquoise-water-lake-hills-background_181624-12847.jpg?w=2000`,
               }}
             />
           </View>
@@ -110,7 +104,7 @@ function Tags({photos}) {
             <Image
               style={{width: imgWidth, height: imgWidth}}
               source={{
-                uri: `https://picsum.photos/200/300?random=${index + 100}`,
+                uri: `https://img.freepik.com/free-photo/breathtaking-shot-beautiful-stones-turquoise-water-lake-hills-background_181624-12847.jpg?w=2000`,
               }}
             />
           </View>
