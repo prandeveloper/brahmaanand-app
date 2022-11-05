@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Picker} from '@react-native-picker/picker';
 import {
   Collapse,
@@ -21,22 +21,43 @@ import {
 import {launchImageLibrary} from 'react-native-image-picker';
 import CustomHeader from '../components/CustomHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+//import MultiSelect from 'react-native-multiple-select';
+
+// const items = [
+//   {id: 1, name: 'angellist'},
+//   {id: 2, name: 'codepen'},
+//   {id: 3, name: 'envelope'},
+//   {id: 4, name: 'etsy'},
+//   {id: 5, name: 'facebook'},
+//   {id: 6, name: 'foursquare'},
+//   {id: 7, name: 'github-alt'},
+//   {id: 8, name: 'github'},
+//   {id: 9, name: 'gitlab'},
+//   {id: 10, name: 'instagram'},
+// ];
 
 const SubmitResource = ({navigation}) => {
-  const [text, setText] = useState('');
+  const [url, setUrl] = useState('');
   const [type, setType] = useState();
   const [format, setFormat] = useState();
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState('');
   const [subCategory, setSubCategory] = useState();
-  const [hashtag, setHashTag] = useState();
+  const [topic, setTopic] = useState('');
   const [title, setTitle] = useState('');
   const [name, setName] = useState('');
   const [upYear, setUpYear] = useState();
   const [desc, setDesc] = useState('');
   const [comment, setComment] = useState();
-  const [selectedItems, setselectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [singleFile, setSingleFile] = useState('');
+  const [catList, setCatList] = useState([]);
+  const [subCatList, setSubCatList] = useState([]);
+  const [yearList, setYearList] = useState([]);
 
+  // const onSelectedItemsChange = selectedItems => {
+  //   setSelectedItems(selectedItems);
+  // };
   const chooseFrontFile = type => {
     let options = {
       mediaType: 'photo',
@@ -65,10 +86,62 @@ const SubmitResource = ({navigation}) => {
     });
   };
 
+  const getCategory = () => {
+    axios
+      .get(`http://43.205.82.226:9000/admin/getallCategory`)
+      .then(response => {
+        //console.log(response.data.data);
+        setCatList(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const getSubCategory = () => {
+    // console.log(category);
+    axios
+      .get(`http://43.205.82.226:9000/admin/listbycategory/${category}`)
+      .then(response => {
+        //   console.log(response.data.data);
+        setSubCatList(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const getYear = () => {
+    axios
+      .get(`http://43.205.82.226:9000/user/allYear`)
+      .then(response => {
+        //console.log(response.data.data);
+        setYearList(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const getLanguage = () => {
+    axios
+      .get(``)
+      .then(response => {
+        console.log(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCategory();
+    getSubCategory();
+
+    getYear();
+    getLanguage();
+  }, [getSubCategory()]);
+
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeader title="Resource" navigation={navigation} />
-
       <ScrollView style={{}}>
         <View style={styles.mainView}>
           <View style={styles.innerView}>
@@ -85,8 +158,8 @@ const SubmitResource = ({navigation}) => {
             <Text style={styles.labelText}>Link</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setText}
-              value={text}
+              onChangeText={setUrl}
+              value={url}
               placeholder="Enter URL"
               placeholderTextColor="#000"
             />
@@ -112,8 +185,8 @@ const SubmitResource = ({navigation}) => {
               onValueChange={(itemValue, itemIndex) => setFormat(itemValue)}>
               <Picker.Item label="Select Format..." />
               <Picker.Item label="Video" value="video" />
-              <Picker.Item label="Image" value="image" />
-              <Picker.Item label="Url" value="url" />
+              <Picker.Item label="Text" value="text" />
+              <Picker.Item label="Video & Text" value="video & text" />
             </Picker>
           </View>
           <View style={styles.innerView}>
@@ -123,8 +196,14 @@ const SubmitResource = ({navigation}) => {
               dropdownIconColor="#000"
               selectedValue={category}
               onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}>
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js" />
+              <Picker.Item label="Select Category" />
+              {catList?.map(cat => (
+                <Picker.Item
+                  key={cat?._id}
+                  label={cat?.title}
+                  value={cat?._id}
+                />
+              ))}
             </Picker>
           </View>
           <View style={styles.innerView}>
@@ -136,44 +215,49 @@ const SubmitResource = ({navigation}) => {
               onValueChange={(itemValue, itemIndex) =>
                 setSubCategory(itemValue)
               }>
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js" />
+              <Picker.Item label="Select Sub-Category" />
+              {subCatList?.map(subCat => (
+                <Picker.Item
+                  key={subCat?._id}
+                  label={subCat?.title}
+                  value={subCat?._id}
+                />
+              ))}
             </Picker>
           </View>
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>HashTag</Text>
-            <Picker
-              style={styles.pickerInput}
-              dropdownIconColor="#000"
-              selectedValue={hashtag}
-              onValueChange={(itemValue, itemIndex) => setHashTag(itemValue)}>
-              <Picker.Item label="#hello" value="#hello" />
-              <Picker.Item label="#good" value="#good" />
-            </Picker>
+            <Text style={styles.labelText}>Topic</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setTopic}
+              value={topic}
+              placeholder="Enter Topic"
+              placeholderTextColor="#000"
+            />
           </View>
           <View style={styles.innerView}>
-            {/*<Text style={styles.labelText}>Language</Text>
-               <MultiSelect
-                hideTags
-                items={items}
-                uniqueKey="id"
-                onSelectedItemsChange={onSelectedItemsChange}
-                selectedItems={selectedItems}
-                selectText="Pick Items"
-                searchInputPlaceholderText="Search Items..."
-                onChangeInput={text => console.log(text)}
-                altFontFamily="ProximaNova-Light"
-                tagRemoveIconColor="#CCC"
-                tagBorderColor="#CCC"
-                tagTextColor="#CCC"
-                selectedItemTextColor="#CCC"
-                selectedItemIconColor="#CCC"
-                itemTextColor="#000"
-                displayKey="name"
-                searchInputStyle={{color: '#CCC'}}
-                submitButtonColor="#CCC"
-                submitButtonText="Submit"
-              /> */}
+            <Text style={styles.labelText}>Language</Text>
+
+            {/* <MultiSelect
+              hideTags
+              items={items}
+              uniqueKey="id"
+              onSelectedItemsChange={onSelectedItemsChange}
+              selectedItems={selectedItems}
+              selectText="Select Items"
+              searchInputPlaceholderText="Search Items Here..."
+              onChangeInput={text => console.log(text)}
+              tagRemoveIconColor="#CCC"
+              tagBorderColor="#CCC"
+              tagTextColor="#CCC"
+              selectedItemTextColor="#CCC"
+              selectedItemIconColor="#CCC"
+              itemTextColor="#000"
+              displayKey="name"
+              searchInputStyle={{color: '#CCC'}}
+              submitButtonColor="#00BFA5"
+              submitButtonText="Submit"
+            /> */}
           </View>
           <View style={styles.innerView}>
             <Collapse>
@@ -216,12 +300,14 @@ const SubmitResource = ({navigation}) => {
                     onValueChange={(itemValue, itemIndex) =>
                       setUpYear(itemValue)
                     }>
-                    <Picker.Item label="2010" value="2010" />
-                    <Picker.Item label="2011" value="2012" />
-                    <Picker.Item label="2012" value="2012" />
-                    <Picker.Item label="2013" value="2012" />
-                    <Picker.Item label="2014" value="2012" />
-                    <Picker.Item label="2015" value="2012" />
+                    <Picker.Item label="Select Year" />
+                    {yearList?.map(year => (
+                      <Picker.Item
+                        key={year._id}
+                        label={year?.yrName}
+                        value={year._id}
+                      />
+                    ))}
                   </Picker>
                 </View>
                 <View style={styles.innerView}>
