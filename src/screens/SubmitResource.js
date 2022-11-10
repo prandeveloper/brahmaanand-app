@@ -22,20 +22,6 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import CustomHeader from '../components/CustomHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-//import MultiSelect from 'react-native-multiple-select';
-
-// const items = [
-//   {id: 1, name: 'angellist'},
-//   {id: 2, name: 'codepen'},
-//   {id: 3, name: 'envelope'},
-//   {id: 4, name: 'etsy'},
-//   {id: 5, name: 'facebook'},
-//   {id: 6, name: 'foursquare'},
-//   {id: 7, name: 'github-alt'},
-//   {id: 8, name: 'github'},
-//   {id: 9, name: 'gitlab'},
-//   {id: 10, name: 'instagram'},
-// ];
 
 const SubmitResource = ({navigation}) => {
   const [url, setUrl] = useState('');
@@ -55,9 +41,6 @@ const SubmitResource = ({navigation}) => {
   const [subCatList, setSubCatList] = useState([]);
   const [yearList, setYearList] = useState([]);
 
-  // const onSelectedItemsChange = selectedItems => {
-  //   setSelectedItems(selectedItems);
-  // };
   const chooseFrontFile = type => {
     let options = {
       mediaType: 'photo',
@@ -237,27 +220,6 @@ const SubmitResource = ({navigation}) => {
           </View>
           <View style={styles.innerView}>
             <Text style={styles.labelText}>Language</Text>
-
-            {/* <MultiSelect
-              hideTags
-              items={items}
-              uniqueKey="id"
-              onSelectedItemsChange={onSelectedItemsChange}
-              selectedItems={selectedItems}
-              selectText="Select Items"
-              searchInputPlaceholderText="Search Items Here..."
-              onChangeInput={text => console.log(text)}
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CCC"
-              tagTextColor="#CCC"
-              selectedItemTextColor="#CCC"
-              selectedItemIconColor="#CCC"
-              itemTextColor="#000"
-              displayKey="name"
-              searchInputStyle={{color: '#CCC'}}
-              submitButtonColor="#00BFA5"
-              submitButtonText="Submit"
-            /> */}
           </View>
           <View style={styles.innerView}>
             <Collapse>
