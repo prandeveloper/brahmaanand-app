@@ -22,6 +22,7 @@ export default function HomeScreen({navigation}) {
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = query => setSearchQuery(query);
   const [items, setItems] = useState([]);
+  const [blog, setBlog] = useState([]);
 
   const renderBanner = ({item, index}) => {
     return <BannerSlider data={item} />;
@@ -39,8 +40,21 @@ export default function HomeScreen({navigation}) {
       });
   };
 
+  const getBlogs = () => {
+    axios
+      .get(`http://43.205.82.226:9000/admin/getBlog`)
+      .then(response => {
+        //console.log(response.data.data);
+        setBlog(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getCategory();
+    getBlogs();
   }, []);
 
   return (
@@ -156,22 +170,6 @@ export default function HomeScreen({navigation}) {
                 />
               </TouchableOpacity>
             </View>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/WalkThrough/img2.png')}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/WalkThrough/img3.png')}
-                />
-              </TouchableOpacity>
-            </View>
           </ScrollView>
         </View>
 
@@ -183,47 +181,30 @@ export default function HomeScreen({navigation}) {
               <Text style={styles.viewAll}>See All</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Blog Detail')}>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/images/pool.jpg')}
-                />
-                <Text style={styles.sliderTitle}>Sports</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Blog Detail')}>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/images/pmjay.jpg')}
-                />
-                <Text style={styles.sliderTitle}>Goverment</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Blog Detail')}>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/images/god-of-war.jpeg')}
-                />
-                <Text style={styles.sliderTitle}>Games</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Blog Detail')}>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/images/god-of-war.jpeg')}
-                />
-                <Text style={styles.sliderTitle}>Demo</Text>
-              </TouchableOpacity>
-            </View>
+          <ScrollView
+            horizontal={true}
+            style={{flexDirection: 'row', marginBottom: 20}}>
+            {blog?.slice(0, 10).map(bList => (
+              <View style={styles.sliderImg} key={bList._id}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Blog Detail')}>
+                  <Image
+                    style={styles.slider}
+                    source={{uri: `${bList.blogImg}`}}
+                  />
+                  <Text style={styles.sliderTitle}>{bList?.blog_title}</Text>
+                  <View style={styles.blogMaster}>
+                    <Image
+                      style={styles.blogMasterImage}
+                      source={{uri: `${bList.posted_by_img}`}}
+                    />
+                    <Text style={styles.blogMasterText}>
+                      {bList?.posted_by}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))}
           </ScrollView>
         </View>
       </ScrollView>
@@ -249,7 +230,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   title: {
-    color: '#FC9358',
+    color: '#000',
     fontSize: 18,
     fontWeight: '700',
   },
@@ -265,27 +246,42 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   slider: {
-    width: 140,
-    height: 100,
-    marginHorizontal: 5,
+    width: 180,
+    height: 140,
+    marginHorizontal: 0,
     borderRadius: 10,
   },
   sliderTitle: {
     color: '#000',
     marginHorizontal: 5,
     fontWeight: '600',
+    margin: 10,
   },
   sliderImg: {
-    backgroundColor: '#F3F3F3',
-    height: 120,
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    shadowColor: '#333',
     elevation: 7,
-    shadowOffset: {width: 0, height: 3},
-    shadowRadius: 10,
+    marginVertical: 10,
     marginHorizontal: 5,
+  },
+  blogMaster: {
+    flexDirection: 'row',
+    margin: 5,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  blogMasterImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+  },
+  blogMasterText: {
+    color: '#000',
+    fontWeight: '600',
+    marginLeft: 10,
+    textTransform: 'capitalize',
   },
   sliderHash: {
     backgroundColor: '#848482',
@@ -307,11 +303,10 @@ const styles = StyleSheet.create({
   },
   //grid View
   gridView: {
-    marginTop: 10,
     flex: 1,
   },
   itemContainer: {
-    height: 150,
+    height: 170,
   },
   itemView: {
     backgroundColor: 'rgba(0,0,0,0.5)',

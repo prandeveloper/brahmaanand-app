@@ -22,6 +22,18 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import CustomHeader from '../components/CustomHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import {MultiSelect} from 'react-native-element-dropdown';
+
+const data = [
+  {label: 'Item 1', value: '1'},
+  {label: 'Item 2', value: '2'},
+  {label: 'Item 3', value: '3'},
+  {label: 'Item 4', value: '4'},
+  {label: 'Item 5', value: '5'},
+  {label: 'Item 6', value: '6'},
+  {label: 'Item 7', value: '7'},
+  {label: 'Item 8', value: '8'},
+];
 
 const SubmitResource = ({navigation}) => {
   const [url, setUrl] = useState('');
@@ -40,6 +52,11 @@ const SubmitResource = ({navigation}) => {
   const [catList, setCatList] = useState([]);
   const [subCatList, setSubCatList] = useState([]);
   const [yearList, setYearList] = useState([]);
+  const [lang, setLang] = useState([]);
+
+  const [selected, setSelected] = useState([]);
+
+  console.log(selected);
 
   const chooseFrontFile = type => {
     let options = {
@@ -105,9 +122,10 @@ const SubmitResource = ({navigation}) => {
   };
   const getLanguage = () => {
     axios
-      .get(``)
+      .get(`http://43.205.82.226:9000/user/allLang`)
       .then(response => {
         console.log(response.data.data);
+        setLang(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -117,7 +135,6 @@ const SubmitResource = ({navigation}) => {
   useEffect(() => {
     getCategory();
     getSubCategory();
-
     getYear();
     getLanguage();
   }, [getSubCategory()]);
@@ -220,6 +237,24 @@ const SubmitResource = ({navigation}) => {
           </View>
           <View style={styles.innerView}>
             <Text style={styles.labelText}>Language</Text>
+            <MultiSelect
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              //search
+              data={lang}
+              labelField="language"
+              itemTextStyle={{color: '#000'}}
+              valueField="_id"
+              placeholder="Select item"
+              searchPlaceholder="Search..."
+              value={selected}
+              onChange={item => {
+                setSelected(item);
+              }}
+              selectedStyle={styles.selectedStyle}
+            />
           </View>
           <View style={styles.innerView}>
             <Collapse>
@@ -367,5 +402,29 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '700',
     fontSize: 18,
+  },
+  //multi select
+  dropdown: {
+    height: 50,
+    backgroundColor: 'transparent',
+    borderBottomColor: 'black',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: '#000',
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: '#000',
+  },
+
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+
+  selectedStyle: {
+    borderRadius: 10,
   },
 });
