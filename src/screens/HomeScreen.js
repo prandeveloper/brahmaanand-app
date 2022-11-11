@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
+  Button,
   View,
   Text,
   SafeAreaView,
@@ -17,12 +18,27 @@ import CustomHeader from '../components/CustomHeader';
 import {Searchbar} from 'react-native-paper';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 export default function HomeScreen({navigation}) {
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = query => setSearchQuery(query);
   const [items, setItems] = useState([]);
   const [blog, setBlog] = useState([]);
+  const [content, setContent] = useState([]);
+
+  const [playing, setPlaying] = useState(false);
+
+  const onStateChange = useCallback(state => {
+    if (state === 'ended') {
+      setPlaying(false);
+      Alert.alert('video has finished playing!');
+    }
+  }, []);
+
+  const togglePlaying = useCallback(() => {
+    setPlaying(prev => !prev);
+  }, []);
 
   const renderBanner = ({item, index}) => {
     return <BannerSlider data={item} />;
@@ -34,6 +50,18 @@ export default function HomeScreen({navigation}) {
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const getFeaturedContent = () => {
+    axios
+      .get(`http://3.7.173.138:9000/admin/admin_featured_cnt`)
+      .then(response => {
+        console.log(response.data.data);
+        setContent(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -55,6 +83,7 @@ export default function HomeScreen({navigation}) {
   useEffect(() => {
     getCategory();
     getBlogs();
+    getFeaturedContent();
   }, []);
 
   return (
@@ -157,19 +186,23 @@ export default function HomeScreen({navigation}) {
         <View style={{paddingVertical: 20}}>
           <View style={styles.topHeding}>
             <Text style={styles.title}>Featured Content</Text>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-            <View style={styles.sliderImg}>
-              <TouchableOpacity>
-                <Image
-                  style={styles.slider}
-                  source={require('../assets/WalkThrough/img1.png')}
+            {content?.map(video => (
+              <View style={styles.featureStyle} key={video._id}>
+                <YoutubePlayer
+                  width={280}
+                  height={250}
+                  play={playing}
+                  videoId={video.video_link}
+                  onChangeState={onStateChange}
+                  autoplay={false}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            ))}
           </ScrollView>
         </View>
 
@@ -187,7 +220,9 @@ export default function HomeScreen({navigation}) {
             {blog?.slice(0, 10).map(bList => (
               <View style={styles.sliderImg} key={bList._id}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Blog Detail')}>
+                  onPress={() =>
+                    navigation.navigate('Blog Detail', {id: bList._id})
+                  }>
                   <Image
                     style={styles.slider}
                     source={{uri: `${bList.blogImg}`}}
@@ -319,5 +354,10 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '600',
     margin: 10,
+  },
+  featureStyle: {
+    backgroundColor: '#FFF',
+    margin: 5,
+    elevation: 5,
   },
 });

@@ -41,7 +41,7 @@ export default function AllBlog({navigation}) {
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('Blog Detail')}
+            onPress={() => navigation.navigate('Blog Detail', {id: item._id})}
             ket={item._id}>
             <View>
               <Image

@@ -9,10 +9,13 @@ import {
   ScrollView,
   FlatList,
   Button,
+  Linking,
 } from 'react-native';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Moment from 'react-moment';
+import {Rating, AirbnbRating} from 'react-native-ratings';
 
 const ResourceDetail = ({route, navigation}) => {
   const {id} = route.params;
@@ -22,7 +25,7 @@ const ResourceDetail = ({route, navigation}) => {
     axios
       .get(`http://43.205.82.226:9000/admin/getone_reslist/${id}`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setItems(response.data.data);
       })
       .catch(error => {
@@ -47,6 +50,21 @@ const ResourceDetail = ({route, navigation}) => {
           <Text style={styles.name}>{items?.resTitle}</Text>
           {/* <Text style={styles.price}>$ 12.22</Text> */}
           <Text style={styles.description}>{items?.res_desc}</Text>
+        </View>
+
+        <View style={styles.contentColors}>
+          <View style={styles.btnColor}>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Link :</Text>
+            </View>
+            <TouchableOpacity style={styles.textView}>
+              <Text
+                style={styles.headText}
+                onPress={() => Linking.openURL(items.link)}>
+                {items.link}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.contentColors}>
@@ -95,6 +113,9 @@ const ResourceDetail = ({route, navigation}) => {
               </Text>
             </View>
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.contentColors}>
           <TouchableOpacity style={styles.btnColor}>
             <View style={styles.iconView}>
               <Ionicons name="cube" color={'#5F56C6'} size={25} />
@@ -106,9 +127,7 @@ const ResourceDetail = ({route, navigation}) => {
               </Text>
             </View>
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.contentColors}>
           <TouchableOpacity style={styles.btnColor}>
             <View style={styles.iconView}>
               <Ionicons name="calendar" color={'#FF6262'} size={25} />
@@ -124,7 +143,9 @@ const ResourceDetail = ({route, navigation}) => {
               ))}
             </View>
           </TouchableOpacity>
+        </View>
 
+        <View style={styles.contentColors}>
           <TouchableOpacity style={styles.btnColor}>
             <View style={styles.iconView}>
               <Ionicons name="stats-chart" color={'#FFA841'} size={25} />
@@ -132,7 +153,7 @@ const ResourceDetail = ({route, navigation}) => {
             <View style={styles.textView}>
               <Text style={styles.headText}>Rating:</Text>
               <Text style={[styles.subText, {color: '#FFA841'}]}>
-                {items?.creatorName}
+                <Ionicons name="md-star" color={'#FFA841'} size={20} />
               </Text>
             </View>
           </TouchableOpacity>
@@ -143,8 +164,10 @@ const ResourceDetail = ({route, navigation}) => {
             </View>
             <View style={styles.textView}>
               <Text style={styles.headText}>Submitted::</Text>
-              <Text style={[styles.subText, {color: '#FC9357'}]}>
-                {items?.createdAt}
+              <Text style={[styles.subText, {color: '#4095FF'}]}>
+                <Moment element={Text} format="lll">
+                  {items?.createdAt}
+                </Moment>
               </Text>
             </View>
           </TouchableOpacity>
@@ -171,41 +194,20 @@ const ResourceDetail = ({route, navigation}) => {
         </View>
 
         <View style={styles.starContainer}>
-          <Image
-            style={styles.star}
-            source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
-          />
-          <Image
-            style={styles.star}
-            source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
-          />
-          <Image
-            style={styles.star}
-            source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
-          />
-          <Image
-            style={styles.star}
-            source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
-          />
-          <Image
-            style={styles.star}
-            source={{uri: 'https://img.icons8.com/color/40/000000/star.png'}}
+          <Text style={styles.name}>Post A Review</Text>
+        </View>
+        <View style={styles.starContainer}>
+          <AirbnbRating
+            defaultRating={0}
+            size={30}
+            //showRating
+            onFinishRating={rating => {
+              Alert.alert('rating' + JSON.stringify(rating));
+            }}
+            style={{paddingVertical: 10}}
           />
         </View>
-        {/* <View style={styles.contentSize}>
-          <TouchableOpacity style={styles.btnSize}>
-            <Text>S</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnSize}>
-            <Text>M</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnSize}>
-            <Text>L</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnSize}>
-            <Text>XL</Text>
-          </TouchableOpacity>
-        </View> */}
+
         <View style={styles.separator}></View>
         <View style={styles.addToCarContainer}>
           {/* <TouchableOpacity
@@ -253,9 +255,10 @@ const styles = StyleSheet.create({
   },
   contentColors: {
     justifyContent: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     flexDirection: 'row',
     marginTop: 20,
+    marginRight: 35,
   },
   btnColor: {
     flex: 1,
