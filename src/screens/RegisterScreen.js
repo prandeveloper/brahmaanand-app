@@ -4,89 +4,87 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
-
-import DatePicker from 'react-native-date-picker';
-
-import InputField from '../components/InputField';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import RegistrationSVG from '../assets/images/misc/registration.svg';
-import GoogleSVG from '../assets/images/misc/google.svg';
-import FacebookSVG from '../assets/images/misc/facebook.svg';
-import TwitterSVG from '../assets/images/misc/twitter.svg';
 import CustomButton from '../components/CustomButton';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {TextInput} from 'react-native-paper';
+
 const RegisterScreen = ({navigation}) => {
-  // const [date, setDate] = useState(new Date());
-  // const [open, setOpen] = useState(false);
-  // const [fullName, setfullName] = useState('');
-  // const [number, setNumber] = useState('');
-  // const [city, setCity] = useState('');
-  // const [storeddata, setStoreddata] = useState('');
-  // const [dobLabel, setDobLabel] = useState('Date of Birth');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [storeddata, setStoreddata] = useState('');
+  const [passwordSecured, setPasswordSecured] = useState(true);
 
-  // const _storeData = async id => {
-  //   try {
-  //     await AsyncStorage.setItem('user_id', JSON.stringify(id));
-  //     console.log('id Saved');
-  //   } catch (error) {
-  //     console.log('Some error in setting id');
-  //   }
-  // };
-  // const getData = async () => {
-  //   try {
-  //     const user_id = await AsyncStorage.getItem('user_id');
-  //     if (user_id !== null) {
-  //       console.log('success');
-  //       console.log('user_id ???????', user_id);
-  //       setStoreddata(user_id);
-  //       navigation.replace('Login');
-  //     }
-  //   } catch (e) {
-  //     console.log('no Value in login');
-  //   }
-  // };
-  // useEffect(() => {
-  //   getData();
-  // }, [storeddata]);
+  function showToast() {
+    ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
+  }
 
-  // const postDataUsingSimplePostCall = async () => {
-  //   if (!fullName.trim() || !number.trim() || !city.trim()) {
-  //     alert('Enter Details');
-  //     return;
-  //   }
-  //   axios
-  //     .post(
-  //       'http://Brahmaanand.in/newadmin/api/ApiCommonController/userRegister',
-  //       {
-  //         username: fullName,
-  //         mobile_no: number,
-  //         city: city,
-  //         dob: date,
-  //       },
-  //     )
-  //     .then(function (response) {
-  //       // handle success
-  //       // alert(JSON.stringify(response.data));
-  //       // save user Id
-  //       if (response.data !== null) {
-  //         _storeData(response.data.data.id);
-  //         navigation.replace('Login');
-  //       } else {
-  //         console.log('no id!');
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       // handle error
-  //       alert(error.message);
-  //     });
-  // };
+  const _storeData = async _id => {
+    try {
+      await AsyncStorage.setItem('userId', _id);
+      console.log('Id Saved');
+    } catch (error) {
+      console.log('Some error in setting Id');
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const user = await AsyncStorage.getItem('userId');
+      if (user !== null) {
+        console.log('success');
+        console.log(user);
+        setStoreddata(user);
+        //navigation.replace('Home');
+      }
+    } catch (e) {
+      console.log('no Value in Signup');
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, [storeddata]);
+
+  const signUp = () => {
+    console.log(userName, email, password);
+    axios
+      .post(`http://43.205.82.226:9000/user/signup`, {
+        username: userName,
+        email: email,
+        password: password,
+      })
+      .then(response => {
+        console.log('@@@@', response.data.data);
+        console.log(response.data.message);
+        // if (
+        //   response.data.message === 'success' ||
+        //   response.data.message == 'success'
+        // ) {
+        //   ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
+        // }
+        console.log(response.data.data._id);
+        if (response.data.data._id != null) {
+          _storeData(response.data.data._id);
+          navigation.replace('Home');
+        } else {
+          console.log('no ID!');
+        }
+      })
+      .catch(error => {
+        console.log('eeee', error.response.data);
+        // if (
+        //   error.response.data.msg == 'User Doesnot Exist' ||
+        //   error.response.data.msg === 'User Doesnot Exist'
+        // ) {
+        //   showToast();
+        // }
+      });
+  };
 
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -112,101 +110,66 @@ const RegisterScreen = ({navigation}) => {
           Register
         </Text>
 
-        <InputField
-          // value={fullName}
-          // onChangeText={setfullName}
-          label={'Full Name'}
-          icon={
-            <Ionicons
-              name="person-outline"
-              size={20}
-              color="#666"
-              style={{marginRight: 5}}
-            />
-          }
-        />
-
-        <InputField
-          // value={number}
-          // onChangeText={setNumber}
-          label={'Enter your Phone No. '}
-          icon={
-            <Ionicons
-              name="phone-portrait-outline"
-              size={20}
-              color="#666"
-              style={{marginRight: 5}}
-            />
-          }
-        />
-        <InputField
-          // value={city}
-          // onChangeText={setCity}
-          label={'Enter your city '}
-          icon={
-            <Ionicons
-              name="phone-portrait-outline"
-              size={20}
-              color="#666"
-              style={{marginRight: 5}}
-            />
-          }
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            borderBottomColor: '#ccc',
-            borderBottomWidth: 1,
-            paddingBottom: 8,
-            marginBottom: 30,
-          }}>
-          <Ionicons
-            name="calendar-outline"
-            size={20}
-            color="#666"
-            style={{marginRight: 5}}
+        <View style={styles.inputField}>
+          <TextInput
+            label="UserName"
+            mode="outlined"
+            outlineColor="orange"
+            value={userName}
+            onChangeText={setUserName}
           />
-          <TouchableOpacity onPress={() => setOpen(true)}>
-            <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
-              23/10/2022
-              {/* {dobLabel} */}
-            </Text>
+        </View>
+
+        <View style={styles.inputField}>
+          <TextInput
+            label="Email"
+            mode="outlined"
+            outlineColor="orange"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
+        <View style={styles.inputField}>
+          <TextInput
+            label="Password"
+            mode="outlined"
+            outlineColor="orange"
+            secureTextEntry={passwordSecured}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            style={{padding: 4}}
+            onPress={() => {
+              setPasswordSecured(!passwordSecured);
+            }}>
+            <Text style={{color: 'blue'}}>Show Password</Text>
           </TouchableOpacity>
         </View>
 
-        {/* <DatePicker
-          modal
-          open={open}
-          date={date}
-          mode={'date'}
-          maximumDate={new Date('2005-01-01')}
-          minimumDate={new Date('1980-01-01')}
-          onConfirm={date => {
-            setOpen(false);
-            setDate(date);
-            setDobLabel(date.toDateString());
-          }}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        /> */}
+        <CustomButton label={'REGISTER'} onPress={signUp} />
 
-        <CustomButton label={'Register'} onPress={() => {}} />
-
-        {/* <View
+        <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
             marginBottom: 30,
           }}>
-          <Text>Already registered?</Text>
+          <Text style={{color: '#000'}}>Already registered?</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  inputField: {
+    marginVertical: 10,
+  },
+});

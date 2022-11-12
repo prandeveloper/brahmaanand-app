@@ -112,7 +112,7 @@ const Setting = ({navigation}) => {
                   routes: [{name: 'Login'}],
                 });
                 console.log('Logout Successfull');
-                await AsyncStorage.multiRemove(['auth-token', 'plan']);
+                await AsyncStorage.removeItem('userId');
               }}>
               <Ionicons name="power" size={22} color="#FF0000" />
               <Text style={styles.btnLogout}>Logout</Text>

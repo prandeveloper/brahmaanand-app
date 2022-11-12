@@ -3,87 +3,88 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   Image,
   TouchableOpacity,
+  StyleSheet,
+  ToastAndroid,
 } from 'react-native';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import LoginSVG from '../assets/images/misc/login.svg';
-import GoogleSVG from '../assets/images/misc/google.svg';
-import FacebookSVG from '../assets/images/misc/facebook.svg';
-import TwitterSVG from '../assets/images/misc/twitter.svg';
-
 import CustomButton from '../components/CustomButton';
-import InputField from '../components/InputField';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {TextInput} from 'react-native-paper';
 
 const LoginScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordSecured, setPasswordSecured] = useState(true);
   const [storeddata, setStoreddata] = useState('');
-  const [userNumber, setUserNumber] = useState('');
+
+  function showToast() {
+    ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
+  }
+
+  const _storeData = async _id => {
+    try {
+      await AsyncStorage.setItem('userId', _id);
+      console.log('Id Saved');
+    } catch (error) {
+      console.log('Some error in setting Id');
+    }
+  };
+
   const getData = async () => {
     try {
-      const user_id = await AsyncStorage.getItem('user_id');
-      if (user_id !== null) {
-        console.log('@@@@@@@@', user_id);
-        setStoreddata(user_id);
+      const user = await AsyncStorage.getItem('userId');
+      if (user !== null) {
+        console.log('success');
+        console.log(user);
+        setStoreddata(user);
+        navigation.replace('Home');
       }
     } catch (e) {
       console.log('no Value in login');
     }
   };
-  const getNumber = async () => {
-    axios
-      .get(
-        `http://Brahmaanand.in/newadmin/api/ApiCommonController/getuseruserid/${storeddata}`,
-      )
-      .then(response => {
-        console.log('<<<<<', response.data.data);
-        const number = response.data.data[0].mobile_no;
-        setUserNumber(number);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
   useEffect(() => {
     getData();
-    getNumber();
   }, [storeddata]);
 
-  const sendMobile = () => {
-    console.log(userNumber);
+  const signIn = () => {
+    console.log(email, password);
     axios
-      .post(
-        `http://Brahmaanand.in/newadmin/api/ApiCommonController/user_loginbypassword`,
-        {
-          mobile_no: userNumber,
-        },
-      )
+      .post(`http://43.205.82.226:9000/user/login`, {
+        email: email,
+        password: password,
+      })
       .then(response => {
-        console.log(response.data);
-        if (response.data != null) {
-          navigation.replace('OtpScreen');
+        console.log('@@@@', response.data);
+        console.log(response.data.msg);
+        if (response.data.msg === 'success' || response.data.msg == 'success') {
+          ToastAndroid.show('Login Successfull....', ToastAndroid.SHORT);
+        }
+        console.log(response.data.user._id);
+        if (response.data.user._id != null) {
+          _storeData(response.data.user._id);
+          navigation.replace('Home');
         } else {
-          console.log('no id!');
+          console.log('no token!');
         }
       })
       .catch(error => {
-        console.log(error);
+        console.log('eeee', error.response.data);
+        // if (
+        //   error.response.data.msg == 'User Doesnot Exist' ||
+        //   error.response.data.msg === 'User Doesnot Exist'
+        // ) {
+        //   showToast();
+        // }
       });
   };
+
   return (
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
       <View style={{paddingHorizontal: 25}}>
         <View style={{alignItems: 'center'}}>
-          {/* <LoginSVG
-            height={300}
-            width={300}
-            style={{transform: [{rotate: '-5deg'}]}}
-          /> */}
           <Image
             style={{width: 300, height: 250}}
             source={require('../assets/VerifyEmail/midiyam.png')}
@@ -100,95 +101,56 @@ const LoginScreen = ({navigation}) => {
           }}>
           Login
         </Text>
-
-        {/* <InputField
-          label={'Email ID'}
-          icon={
-            <MaterialIcons
-            name="alternate-email"
-            size={20}
-            color="#666"
-            style={{marginRight: 5}}
+        <View style={styles.inputField}>
+          <TextInput
+            label="Email"
+            mode="outlined"
+            outlineColor="orange"
+            value={email}
+            onChangeText={setEmail}
           />
-          }
-          keyboardType="email-address"
-        /> */}
+        </View>
 
-        <InputField
-          label={'Enter your Phone No. '}
-          value={userNumber}
-          onChangeText={setUserNumber}
-          icon={
-            <Ionicons
-              name="phone-portrait-outline"
-              size={20}
-              color="#666"
-              style={{marginRight: 5}}
-            />
-          }
-        />
-
-        <CustomButton label={'Login'} onPress={sendMobile} />
-
-        <Text style={{textAlign: 'center', color: '#666', marginBottom: 30}}>
-          Or, login with ...
-        </Text>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 30,
-          }}>
+        <View style={styles.inputField}>
+          <TextInput
+            label="Password"
+            mode="outlined"
+            outlineColor="orange"
+            secureTextEntry={passwordSecured}
+            value={password}
+            onChangeText={setPassword}
+          />
           <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: '#ddd',
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
+            style={{padding: 4}}
+            onPress={() => {
+              setPasswordSecured(!passwordSecured);
             }}>
-            <GoogleSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: '#ddd',
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}>
-            <FacebookSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: '#ddd',
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}>
-            <TwitterSVG height={24} width={24} />
+            <Text style={{color: 'blue'}}>Show Password</Text>
           </TouchableOpacity>
         </View>
 
-        {/* <View
+        <CustomButton label={'LOGIN'} onPress={signIn} />
+
+        <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
             marginBottom: 30,
           }}>
-          <Text>New to the app?</Text>
+          <Text style={{color: '#000'}}>New to the app?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={{color: '#AD40AF', fontWeight: '700'}}> Register</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({
+  inputField: {
+    marginVertical: 10,
+  },
+});

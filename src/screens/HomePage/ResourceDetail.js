@@ -10,16 +10,35 @@ import {
   FlatList,
   Button,
   Linking,
+  TextInput,
 } from 'react-native';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Moment from 'react-moment';
 import {Rating, AirbnbRating} from 'react-native-ratings';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResourceDetail = ({route, navigation}) => {
   const {id} = route.params;
   const [items, setItems] = useState({});
+  const [comment, setComment] = useState('');
+  const [rating, setRating] = useState();
+  const [data, setData] = useState();
+
+  const getData = async () => {
+    try {
+      const user = await AsyncStorage.getItem('userId');
+      if (user !== null) {
+        console.log('success');
+        console.log(user);
+        setData(user);
+        //navigation.replace('Home');
+      }
+    } catch (e) {
+      console.log('no Value in Signup');
+    }
+  };
 
   const getResourceDetail = () => {
     axios
@@ -35,8 +54,29 @@ const ResourceDetail = ({route, navigation}) => {
 
   useEffect(() => {
     getResourceDetail();
+    getData();
   }, []);
-  console.log(id);
+
+  const SubmitReview = () => {
+    if (data !== null && data !== undefined && data !== '') {
+      axios
+        .post(`http://3.7.173.138:9000/user/add_Comment`, {
+          submitresrcId: id,
+          userid: data,
+          comment: comment,
+          rating: rating,
+        })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error.response.data);
+        });
+    } else {
+      navigation.navigate('Login');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -194,27 +234,37 @@ const ResourceDetail = ({route, navigation}) => {
         </View>
 
         <View style={styles.starContainer}>
-          <Text style={styles.name}>Post A Review</Text>
+          <Text style={styles.name}>Post a Rating</Text>
         </View>
-        <View style={styles.starContainer}>
+        <View style={styles.star}>
           <AirbnbRating
+            reviews={false}
             defaultRating={0}
             size={30}
-            //showRating
             onFinishRating={rating => {
-              Alert.alert('rating' + JSON.stringify(rating));
+              setRating(rating);
             }}
-            style={{paddingVertical: 10}}
           />
         </View>
 
-        <View style={styles.separator}></View>
+        <View style={styles.starContainer}>
+          <Text style={styles.name}>Write a Review</Text>
+        </View>
+        <TextInput
+          style={styles.textArea}
+          underlineColorAndroid="transparent"
+          placeholder="Type something"
+          placeholderTextColor="grey"
+          numberOfLines={10}
+          multiline={true}
+          value={comment}
+          onChangeText={setComment}
+        />
+
         <View style={styles.addToCarContainer}>
-          {/* <TouchableOpacity
-            style={styles.shareButton}
-            onPress={() => this.clickEventListener()}>
-            <Text style={styles.shareButtonText}>Add To Cart</Text>
-          </TouchableOpacity> */}
+          <TouchableOpacity style={styles.shareButton} onPress={SubmitReview}>
+            <Text style={styles.shareButtonText}>SUBMIT</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -290,38 +340,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 1,
   },
-  btnSize: {
-    height: 40,
-    width: 40,
-    borderRadius: 40,
-    borderColor: '#778899',
-    borderWidth: 1,
-    marginHorizontal: 3,
-    backgroundColor: 'white',
 
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   starContainer: {
     justifyContent: 'center',
     marginHorizontal: 30,
     flexDirection: 'row',
     marginTop: 20,
   },
-
-  contentSize: {
+  star: {
     justifyContent: 'center',
-    marginHorizontal: 30,
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: -30,
   },
-  separator: {
-    height: 2,
-    backgroundColor: '#eeeeee',
-    marginTop: 20,
-    marginHorizontal: 30,
-  },
+
   shareButton: {
     marginTop: 10,
     height: 45,
@@ -329,13 +360,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    backgroundColor: '#00BFFF',
+    backgroundColor: 'blue',
   },
   shareButtonText: {
     color: '#FFFFFF',
     fontSize: 20,
   },
+
+  textArea: {
+    height: 100,
+    width: 300,
+    marginHorizontal: 40,
+    marginVertical: 20,
+    justifyContent: 'flex-start',
+    borderWidth: 1,
+    color: '#000',
+  },
   addToCarContainer: {
     marginHorizontal: 30,
+    marginBottom: 20,
   },
 });
