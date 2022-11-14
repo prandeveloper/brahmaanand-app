@@ -5,53 +5,50 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeader from '../components/CustomHeader';
-//import SimpleHeader from '../../components/SimpleHeader';
-// import axiosConfig from '../../../axiosConfig';
-// import axios from 'axios';
+import axios from 'axios';
 // import Share from 'react-native-share';
 
 const Setting = ({navigation}) => {
   const [user, setUser] = useState('');
+  const [id, setId] = useState('');
 
-  //   //get User Api for name
-  //   const getUser = async () => {
-  //     axios
-  //       .get(`http://65.0.183.149:8000/user/viewoneuser`, {
-  //         headers: {'auth-token': await AsyncStorage.getItem('auth-token')},
-  //       })
-  //       .then(response => {
-  //         console.log('name', response.data.data);
-  //         const user = response.data.data;
-  //         setUser(user);
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //       });
-  //   };
-  //   useEffect(() => {
-  //     getUser();
-  //   }, []);
+  const getData = async () => {
+    try {
+      const user = await AsyncStorage.getItem('userId');
+      if (user !== null) {
+        console.log('success');
+        console.log(user);
+        setId(user);
+      }
+    } catch (e) {
+      console.log('no Value in Signup');
+    }
+  };
 
-  //   //Delete User permanently api
-  //   const deleteData = () => {
-  //     axiosConfig
-  //       .get(`/dltMyaccount/${user._id}`)
-  //       .then(response => {
-  //         console.log(response.data);
-  //         AsyncStorage.removeItem('auth-token');
-  //         AsyncStorage.removeItem('plan');
-  //         navigation.replace('Login');
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //       });
-  //   };
+  //get User Api for name
+  const getUser = async () => {
+    axios
+      .get(`http://43.205.82.226:9000/user/getoneUser/${id}`)
+      .then(response => {
+        console.log('name', response.data.data);
+        const user = response.data.data;
+        setUser(user);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getData();
+    getUser();
+  }, [id]);
 
   // const onShare = async () => {
   //   try {
@@ -95,28 +92,29 @@ const Setting = ({navigation}) => {
       <ScrollView>
         <View style={styles.textHeding}>
           <View>
-            {user.firstname != '' &&
-            user.firstname != null &&
-            user.firstname != undefined ? (
-              <Text style={styles.userName}>Hi, {user?.firstname}</Text>
+            {user.profileImg != '' &&
+            user.profileImg != null &&
+            user.profileImg != undefined ? (
+              <View style={styles.topImage}>
+                <Image
+                  source={{uri: `${user.profileImg[0]}`}}
+                  style={{width: 80, height: 80, borderRadius: 50}}
+                />
+              </View>
             ) : (
-              <Text style={styles.userName}>Hi, User</Text>
+              <View style={styles.topImage}>
+                <Ionicons name="md-person" size={60} color="#000" />
+              </View>
             )}
           </View>
           <View>
-            <TouchableOpacity
-              style={{flexDirection: 'row'}}
-              onPress={async () => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'Login'}],
-                });
-                console.log('Logout Successfull');
-                await AsyncStorage.removeItem('userId');
-              }}>
-              <Ionicons name="power" size={22} color="#FF0000" />
-              <Text style={styles.btnLogout}>Logout</Text>
-            </TouchableOpacity>
+            {user.username != '' &&
+            user.username != null &&
+            user.username != undefined ? (
+              <Text style={styles.userName}>Hi, {user?.username}</Text>
+            ) : (
+              <Text style={styles.userName}>Hi, User</Text>
+            )}
           </View>
         </View>
         <View style={styles.row}>
@@ -132,14 +130,14 @@ const Setting = ({navigation}) => {
               />
               <Text style={styles.btntxt}>My Profile</Text>
             </View>
-            {/* <View>
+            <View>
               <Ionicons
                 name="chevron-forward-outline"
                 size={22}
-                color={'green'}
+                color={'#000'}
                 style={{marginRight: 20}}
               />
-            </View> */}
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
@@ -154,6 +152,14 @@ const Setting = ({navigation}) => {
                 style={{marginLeft: 10}}
               />
               <Text style={styles.btntxt}>How Brahmaand works?</Text>
+            </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -172,6 +178,14 @@ const Setting = ({navigation}) => {
               />
               <Text style={styles.btntxt}>Terms & Conditions</Text>
             </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
@@ -186,6 +200,14 @@ const Setting = ({navigation}) => {
                 style={{marginLeft: 10}}
               />
               <Text style={styles.btntxt}>Privacy Policy</Text>
+            </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -202,6 +224,14 @@ const Setting = ({navigation}) => {
               />
               <Text style={styles.btntxt}>Contact Us</Text>
             </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -216,42 +246,47 @@ const Setting = ({navigation}) => {
               />
               <Text style={styles.btntxt}>Share App</Text>
             </View>
-          </TouchableOpacity>
-        </View>
-        {/* <View style={styles.row}>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() =>
-              Alert.alert(
-                '',
-                'Are you sure you want to Delete this Account?',
-                [
-                  {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'OK',
-                    onPress: () => {
-                      deleteData();
-                    },
-                  },
-                ],
-                {cancelable: false},
-              )
-            }>
-            <View style={styles.eachSection}>
+            <View>
               <Ionicons
-                name="trash-bin"
-                size={25}
-                color={'#ff1010'}
-                style={{marginLeft: 10}}
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
               />
-              <Text style={styles.delete}>Delete Account Permanently</Text>
             </View>
           </TouchableOpacity>
-        </View> */}
+        </View>
+
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={async () => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
+              console.log('Logout Successfull');
+              await AsyncStorage.removeItem('userId');
+            }}>
+            <View style={styles.eachSection}>
+              <Ionicons
+                name="power"
+                size={25}
+                color={'#FC9358'}
+                style={{marginLeft: 10}}
+              />
+              <Text style={styles.btntxt}>LogOut</Text>
+            </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -270,18 +305,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textHeding: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#727271',
+    flexDirection: 'column',
     marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  topImage: {
+    borderWidth: 1,
+    borderRadius: 40,
+    borderColor: '#FFF',
+    marginBottom: 10,
   },
   userName: {
     fontSize: 17,
     fontFamily: 'Roboto-Medium',
-    marginLeft: 15,
-    color: '#FC9358',
-    marginBottom: 5,
+    color: '#000',
+    marginVertical: 10,
   },
   btnLogout: {
     fontSize: 17,
@@ -296,11 +335,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   row: {
-    width: '100%',
-    height: 50,
     justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#727271',
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginHorizontal: 30,
+    marginVertical: 10,
+    paddingVertical: 20,
+    borderRadius: 10,
   },
   btntxt: {
     fontSize: 15,
