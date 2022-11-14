@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,9 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Moment from 'react-moment';
 
 //import {Feather as Icon} from '@expo/vector-icons';
 
@@ -116,6 +119,39 @@ function Tags({photos}) {
 
 export default function ProfileView({navigation}) {
   const [showContent, setShowContent] = useState('Photos');
+  const [user, setUser] = useState('');
+  const [id, setId] = useState('');
+
+  const getData = async () => {
+    try {
+      const user = await AsyncStorage.getItem('userId');
+      if (user !== null) {
+        console.log('success');
+        console.log(user);
+        setId(user);
+      }
+    } catch (e) {
+      console.log('no Value in Signup');
+    }
+  };
+
+  //get User Api for name
+  const getUser = async () => {
+    axios
+      .get(`http://43.205.82.226:9000/user/getoneUser/${id}`)
+      .then(response => {
+        console.log('name', response.data.data);
+        const user = response.data.data;
+        setUser(user);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getData();
+    getUser();
+  }, [id]);
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -136,21 +172,23 @@ export default function ProfileView({navigation}) {
               <View style={styles.profileImageView}>
                 <Image
                   style={styles.profileImage}
-                  source={{
-                    uri: 'https://randomuser.me/api/portraits/women/46.jpg',
-                  }}
+                  source={{uri: `${user?.profileImg}`}}
                 />
               </View>
               {/* Profile Name and Bio */}
               <View style={styles.nameAndBioView}>
-                <Text style={styles.userFullName}>Sophie Welch</Text>
-                <Text style={styles.userBio}>{'I love capturing photos'}</Text>
+                <Text style={styles.userFullName}>{user?.username}</Text>
+                <Text style={styles.userBio}>{user?.abt_us}</Text>
               </View>
               {/* Posts/Followers/Following View */}
               <View style={styles.countsView}>
                 <View style={styles.countView}>
                   <Text style={styles.countNum}>User Since</Text>
-                  <Text style={styles.countText}> Oct 8, 2022 12:00 AM</Text>
+                  <Text style={styles.countText}>
+                    <Moment element={Text} format="lll">
+                      {user?.createdAt}
+                    </Moment>
+                  </Text>
                 </View>
 
                 <View style={styles.countView}>

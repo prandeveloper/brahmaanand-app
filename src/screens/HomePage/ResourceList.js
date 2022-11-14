@@ -113,6 +113,7 @@ const ResourceList = ({route, navigation}) => {
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
+            key={item._id}
             onPress={() =>
               navigation.navigate('Resource Detail', {id: item._id})
             }>

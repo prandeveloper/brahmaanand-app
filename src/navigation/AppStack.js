@@ -31,6 +31,7 @@ import BlogDetail from '../screens/blogPage/BlogDetail';
 import ResourceList from '../screens/HomePage/ResourceList';
 import ResourceDetail from '../screens/HomePage/ResourceDetail';
 import ProfileView from '../screens/settingPages/ProfileView';
+import ReviewList from '../screens/HomePage/ReviewList';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -86,6 +87,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="Resource Detail"
         component={ResourceDetail}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="All Review"
+        component={ReviewList}
         options={{headerShown: true}}
       />
       <Stack.Screen

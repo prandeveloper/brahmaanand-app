@@ -21,7 +21,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResourceDetail = ({route, navigation}) => {
   const {id} = route.params;
+  console.log(id);
   const [items, setItems] = useState({});
+  const [allReview, setAllReview] = useState({});
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState();
   const [data, setData] = useState();
@@ -30,10 +32,9 @@ const ResourceDetail = ({route, navigation}) => {
     try {
       const user = await AsyncStorage.getItem('userId');
       if (user !== null) {
-        console.log('success');
-        console.log(user);
+        //console.log('success');
+        //console.log(user);
         setData(user);
-        //navigation.replace('Home');
       }
     } catch (e) {
       console.log('no Value in Signup');
@@ -51,10 +52,22 @@ const ResourceDetail = ({route, navigation}) => {
         console.log(error);
       });
   };
+  const getAllReview = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/comment_list/${id}`)
+      .then(response => {
+        //console.log(response.data.data);
+        setAllReview(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     getResourceDetail();
     getData();
+    getAllReview();
   }, []);
 
   const SubmitReview = () => {
@@ -233,6 +246,22 @@ const ResourceDetail = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.commentView}>
+          <View style={styles.commentOneView}>
+            <Text style={styles.commentOneText}>
+              Total Reviews : {allReview.length}
+            </Text>
+          </View>
+          <View style={styles.commentTwoView}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('All Review', {id: items._id})
+              }>
+              <Text style={styles.commentOneText}>See All</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.starContainer}>
           <Text style={styles.name}>Post a Rating</Text>
         </View>
@@ -379,5 +408,24 @@ const styles = StyleSheet.create({
   addToCarContainer: {
     marginHorizontal: 30,
     marginBottom: 20,
+  },
+  commentView: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    marginHorizontal: 10,
+  },
+  commentOneView: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  commentOneText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  commentTwoView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
 });
