@@ -7,7 +7,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabNavigator from './TabNavigator';
-import Booking from '../screens/Booking';
 import Membership from '../screens/DrawerPages/Membership';
 import Feedback from '../screens/DrawerPages/Feedback';
 import About from '../screens/DrawerPages/About';
@@ -189,15 +188,7 @@ const AuthStack = () => {
           ),
         }}
       />
-      <Drawer.Screen
-        name="My Blog"
-        component={Booking}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="pricetag-outline" size={22} color={color} />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name="Membership"
         component={Membership}

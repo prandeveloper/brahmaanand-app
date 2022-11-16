@@ -7,12 +7,17 @@ import {
   View,
   ImageBackground,
   Image,
+  Modal,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
 import {Searchbar} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Slider from 'react-native-slider';
+import {CheckBox} from 'react-native-elements';
+import {Picker} from '@react-native-picker/picker';
 
 const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
@@ -20,6 +25,10 @@ const ResourceList = ({route, navigation}) => {
   const [items, setItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = query => setSearchQuery(query);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [seekbarValue, setSeekbarValue] = useState(5);
+  const [checked, setChecked] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState();
 
   const getResourceList = () => {
     axios
@@ -47,10 +56,110 @@ const ResourceList = ({route, navigation}) => {
             style={styles.searchInput}
           />
         </View>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+          onPress={() => setModalVisible(true)}>
           <Ionicons name="filter" color={'#000'} size={25} />
-        </View>
+        </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        presentationStyle="overFullScreen"
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View>
+              <View style={styles.filterCross}>
+                <View style={styles.filterView}>
+                  <Text style={styles.filterText}>Filter</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.crossView}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Ionicons name="md-close" color="#000" size={25} />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.filterHead}>Review ({seekbarValue})</Text>
+                <Slider
+                  value={seekbarValue}
+                  minimumValue={0}
+                  maximumValue={5}
+                  step={1}
+                  onSlidingComplete={value => {
+                    setSeekbarValue(value);
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={styles.filterHead}>Type</Text>
+                <CheckBox
+                  title="Free"
+                  checked={checked}
+                  onPress={() => setChecked({checked: !checked})}
+                />
+
+                <CheckBox
+                  title="Paid"
+                  checked={checked}
+                  onPress={() => setChecked({checked: !checked})}
+                />
+              </View>
+              <View>
+                <Text style={styles.filterHead}>Format</Text>
+                <CheckBox
+                  title="Video"
+                  checked={checked}
+                  onPress={() => setChecked({checked: !checked})}
+                />
+                <CheckBox
+                  title="Text"
+                  checked={checked}
+                  onPress={() => setChecked({checked: !checked})}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.filterHead}>Not Older Than</Text>
+                <Picker
+                  dropdownIconColor={'black'}
+                  style={{backgroundColor: '#fff', color: '#000'}}
+                  selectedValue={selectedLanguage}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedLanguage(itemValue)
+                  }>
+                  <Picker.Item label="Java" value="java" />
+                  <Picker.Item label="JavaScript" value="js" />
+                </Picker>
+              </View>
+
+              <View>
+                <Text style={styles.filterHead}>Language</Text>
+                <Picker
+                  dropdownIconColor={'black'}
+                  style={{backgroundColor: '#fff', color: '#000'}}
+                  selectedValue={selectedLanguage}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedLanguage(itemValue)
+                  }>
+                  <Picker.Item label="Java" value="java" />
+                  <Picker.Item label="JavaScript" value="js" />
+                </Picker>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.applyTouch}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* <=======Latest Blogs =========> */}
       <View style={{paddingVertical: 10, marginHorizontal: 10}}>
@@ -100,6 +209,9 @@ const ResourceList = ({route, navigation}) => {
           </View>
         </ScrollView>
       </View>
+
+      {/* <=======Latest Blogs =========> */}
+
       <View style={styles.topHeding}>
         <Text style={styles.title}>Searching Product</Text>
       </View>
@@ -214,5 +326,55 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 10,
     marginHorizontal: 5,
+  },
+  //<=============Modal============>
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '90%',
+    //alignItems: 'center',
+  },
+  filterCross: {
+    flexDirection: 'row',
+    marginVertical: 15,
+  },
+  filterView: {
+    flex: 1,
+  },
+  filterText: {
+    color: '#000',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  crossView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  crossText: {},
+  filterHead: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 18,
+  },
+  applyTouch: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  applyText: {
+    color: '#FFF',
+    fontSize: 18,
+    backgroundColor: '#000',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    fontWeight: '600',
+    borderRadius: 15,
   },
 });
