@@ -12,113 +12,23 @@ import {
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'react-moment';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import Bookmark from './Bookmark';
 
-//import {Feather as Icon} from '@expo/vector-icons';
+// function Photos() {
+//   return <Text style={{color: '#000'}}> Hello</Text>;
+// }
 
-function Photos({photos}) {
-  const imgWidth = Dimensions.get('screen').width * 0.33333;
-  return (
-    <View style={{}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          alignItems: 'flex-start',
-        }}>
-        {photos.map((photo, index) => (
-          <View>
-            <Image
-              style={{width: imgWidth, height: imgWidth}}
-              source={{
-                uri: `https://img.freepik.com/free-photo/breathtaking-shot-beautiful-stones-turquoise-water-lake-hills-background_181624-12847.jpg?w=2000`,
-              }}
-            />
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
+// function Albums() {
+//   return <Text style={{color: '#000'}}> Hello</Text>;
+// }
 
-function Albums() {
-  const [albums] = useState([
-    {
-      name: 'Animals',
-      images: [
-        'https://i.picsum.photos/id/1074/367/267.jpg?hmac=2YamGD7W1FNtp9UvAVUDdYUm44xzyHCthHqFl6jVT0M',
-        'https://i.picsum.photos/id/237/367/267.jpg?hmac=9Xp8JrOngpF2E_G3tRKnJMhZu5AX8FimulIG_sLj1xg',
-        'https://i.picsum.photos/id/1084/367/267.jpg?hmac=VaCZRCvuoubMR-S6bXItyxmDVwAaumZU2x1ulWE0faU',
-        'https://i.picsum.photos/id/219/367/267.jpg?hmac=S8RAgXxGj5AUho8KQ0hsjW8bhy1d-WunZNm77FCqC3w',
-      ],
-    },
-    {
-      name: 'Food',
-      images: [
-        'https://images.unsplash.com/photo-1432139555190-58524dae6a55?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-        'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-        'https://images.unsplash.com/photo-1460306855393-0410f61241c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-        'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-      ],
-    },
-  ]);
-  const imgWidth = Dimensions.get('screen').width * 0.33333;
-  return (
-    <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 20}}>
-      {albums.map(album => (
-        <TouchableOpacity style={{flexDirection: 'row', marginTop: 10}}>
-          {album.images.map(img => (
-            <Image
-              style={{width: imgWidth + 50, height: imgWidth + 50}}
-              source={{uri: img}}
-            />
-          ))}
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 10,
-              left: 10,
-              backgroundColor: '#111',
-              paddingHorizontal: 10,
-              paddingVertical: 4,
-              borderRadius: 6,
-            }}>
-            <Text style={{color: '#000', fontFamily: 'SSBold', fontSize: 20}}>
-              {album.name}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-}
-
-function Tags({photos}) {
-  const imgWidth = Dimensions.get('screen').width * 0.33333;
-  return (
-    <View style={{}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          alignItems: 'flex-start',
-        }}>
-        {photos.map((photo, index) => (
-          <View>
-            <Image
-              style={{width: imgWidth, height: imgWidth}}
-              source={{
-                uri: `https://img.freepik.com/free-photo/breathtaking-shot-beautiful-stones-turquoise-water-lake-hills-background_181624-12847.jpg?w=2000`,
-              }}
-            />
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
+// function Tags() {
+//   return <Text style={{color: '#000'}}> Hello</Text>;
+// }
+const Tab = createMaterialTopTabNavigator();
 
 export default function ProfileView({navigation}) {
-  const [showContent, setShowContent] = useState('Photos');
   const [user, setUser] = useState('');
   const [id, setId] = useState('');
 
@@ -207,39 +117,24 @@ export default function ProfileView({navigation}) {
             </View>
             {/* Profile Content */}
             <View style={{marginTop: 20}}>
-              <View style={styles.profileContentButtonsView}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.showContentButton,
-                    borderBottomWidth: showContent === 'Photos' ? 2 : 0,
-                  }}
-                  onPress={() => setShowContent('Photos')}>
-                  <Text style={styles.showContentButtonText}>Video Posted</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.showContentButton,
-                    borderBottomWidth: showContent === 'Albums' ? 2 : 0,
-                  }}
-                  onPress={() => setShowContent('Albums')}>
-                  <Text style={styles.showContentButtonText}>BookMarks</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    ...styles.showContentButton,
-                    borderBottomWidth: showContent === 'Tags' ? 2 : 0,
-                  }}
-                  onPress={() => setShowContent('Tags')}>
-                  <Text style={styles.showContentButtonText}>Points</Text>
-                </TouchableOpacity>
-              </View>
-              {showContent === 'Photos' ? (
-                <Photos photos={new Array(13).fill(1)} />
-              ) : showContent === 'Albums' ? (
-                <Albums />
-              ) : (
-                <Tags photos={new Array(23).fill(1)} />
-              )}
+              <Tab.Navigator
+                screenOptions={{
+                  tabBarLabelStyle: {
+                    fontSize: 11,
+                    color: '#000',
+                    fontWeight: '600',
+                  },
+                  tabBarItemStyle: {width: 130},
+                  tabBarScrollEnabled: true,
+                  tabBarIndicatorStyle: {
+                    backgroundColor: '#000',
+                  },
+                  tabBarStyle: {backgroundColor: '#FFF'},
+                }}>
+                <Tab.Screen name="Video Posted" component={Bookmark} />
+                <Tab.Screen name="BookMarks" component={Bookmark} />
+                <Tab.Screen name="Points" component={Bookmark} />
+              </Tab.Navigator>
             </View>
           </View>
         </>

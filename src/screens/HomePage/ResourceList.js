@@ -18,6 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from 'react-native-slider';
 import {CheckBox} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
+import ShowMore from 'react-native-show-more-button';
 
 const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
@@ -59,9 +60,10 @@ const ResourceList = ({route, navigation}) => {
     getResourceList();
     getPromotion();
   }, []);
+
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView>
+    <ScrollView>
+      <SafeAreaView style={{flex: 1}}>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 6}}>
             <Searchbar
@@ -208,6 +210,16 @@ const ResourceList = ({route, navigation}) => {
         <View style={styles.topHeding}>
           <Text style={styles.title}>Searching Product</Text>
         </View>
+
+        {/* <=======Resource List =========> */}
+
+        {/* <ShowMore
+          height={100}
+          buttonColor={'#000000'}
+          showMoreText="Show More"
+          showLessText="Show Less"
+          
+          > */}
         <FlatGrid
           itemDimension={150}
           data={items}
@@ -232,6 +244,7 @@ const ResourceList = ({route, navigation}) => {
             </TouchableOpacity>
           )}
         />
+        {/* </ShowMore> */}
 
         {/* <=======Latest Blogs =========> */}
         <View style={{paddingVertical: 10, marginHorizontal: 10}}>
@@ -259,8 +272,8 @@ const ResourceList = ({route, navigation}) => {
             ))}
           </ScrollView>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -268,9 +281,9 @@ export default ResourceList;
 
 const styles = StyleSheet.create({
   gridView: {
-    marginTop: 0,
-
-    flex: 1,
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
 
   /******** card **************/

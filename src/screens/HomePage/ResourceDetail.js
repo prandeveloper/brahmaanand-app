@@ -40,7 +40,7 @@ const ResourceDetail = ({route, navigation}) => {
       console.log('no Value in Signup');
     }
   };
-
+  // <========== Resource Detail =======>
   const getResourceDetail = () => {
     axios
       .get(`http://43.205.82.226:9000/admin/getone_reslist/${id}`)
@@ -52,6 +52,8 @@ const ResourceDetail = ({route, navigation}) => {
         console.log(error);
       });
   };
+
+  // <========== Get All Reviews =======>
   const getAllReview = () => {
     axios
       .get(`http://3.7.173.138:9000/user/comment_list/${id}`)
@@ -70,21 +72,74 @@ const ResourceDetail = ({route, navigation}) => {
     getAllReview();
   }, []);
 
-  const SubmitReview = () => {
+  // <==========Post a Likes=======>
+  const hitLike = () => {
     if (data !== null && data !== undefined && data !== '') {
       axios
-        .post(`http://3.7.173.138:9000/user/add_Comment`, {
+        .post(`http://3.7.173.138:9000/user/add_like`, {
           submitresrcId: id,
           userid: data,
-          comment: comment,
-          rating: rating,
+          status: true,
         })
         .then(response => {
-          console.log(response.data);
+          console.log(response);
         })
         .catch(error => {
-          console.log(error.response.data);
+          console.log(error);
         });
+    } else {
+      navigation.navigate('Login');
+    }
+  };
+
+  // <==========Post a Dislike=======>
+  const hitDisLike = () => {
+    if (data !== null && data !== undefined && data !== '') {
+      axios
+        .post(`http://3.7.173.138:9000/user/add_like`, {
+          submitresrcId: id,
+          userid: data,
+          status: true,
+        })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      navigation.navigate('Login');
+    }
+  };
+
+  // <========== Submit Reviews =======>
+  const SubmitReview = () => {
+    if (data !== null && data !== undefined && data !== '') {
+      if (
+        (rating !== '' && rating !== undefined) ||
+        (comment !== '' && comment !== undefined)
+      ) {
+        axios
+          .post(`http://3.7.173.138:9000/user/add_Comment`, {
+            submitresrcId: id,
+            userid: data,
+            comment: comment,
+            rating: rating,
+          })
+          .then(response => {
+            console.log(response.data);
+            if (response.data.message === 'success') {
+              Alert.alert('Review Submitted Successfully');
+              setRating('');
+              setComment('');
+            }
+          })
+          .catch(error => {
+            console.log(error.response.data);
+          });
+      } else {
+        Alert.alert('Please Enter Review and rating');
+      }
     } else {
       navigation.navigate('Login');
     }
@@ -246,9 +301,14 @@ const ResourceDetail = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.likeBtnColor}>
-          <Text style={styles.likeBtnText}>Like</Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.likeBtnColor}>
+            <Text style={styles.likeBtnText}>Add BookMark</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.likeBtnColor}>
+            <Text style={styles.likeBtnText}>Remove BookMark</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.commentView}>
           <View style={styles.commentOneView}>

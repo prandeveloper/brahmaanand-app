@@ -32,6 +32,7 @@ import ResourceDetail from '../screens/HomePage/ResourceDetail';
 import ProfileView from '../screens/settingPages/ProfileView';
 import ReviewList from '../screens/HomePage/ReviewList';
 import PromotionList from '../screens/HomePage/PromotionList';
+import Bookmark from '../screens/settingPages/Bookmark';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -132,6 +133,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="Profile"
         component={ProfileView}
+        options={({route}) => ({
+          title: route.params?.title,
+        })}
+      />
+      <Stack.Screen
+        name="Bookmark"
+        component={Bookmark}
         options={({route}) => ({
           title: route.params?.title,
         })}
