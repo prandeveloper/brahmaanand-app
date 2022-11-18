@@ -29,6 +29,19 @@ const ResourceList = ({route, navigation}) => {
   const [seekbarValue, setSeekbarValue] = useState(5);
   const [checked, setChecked] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState();
+  const [promotion, setPromotion] = useState([]);
+
+  const getPromotion = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/Promotions`)
+      .then(response => {
+        console.log(response.data.data);
+        setPromotion(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const getResourceList = () => {
     axios
@@ -44,201 +57,209 @@ const ResourceList = ({route, navigation}) => {
 
   useEffect(() => {
     getResourceList();
+    getPromotion();
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex: 9}}>
-          <Searchbar
-            placeholder="Search"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-            style={styles.searchInput}
-          />
+      <ScrollView>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 6}}>
+            <Searchbar
+              placeholder="Search"
+              onChangeText={onChangeSearch}
+              value={searchQuery}
+              style={styles.searchInput}
+            />
+          </View>
+          <TouchableOpacity
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+            onPress={() => setModalVisible(true)}>
+            <Ionicons name="filter" color={'#000'} size={25} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-          onPress={() => setModalVisible(true)}>
-          <Ionicons name="filter" color={'#000'} size={25} />
-        </TouchableOpacity>
-      </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        presentationStyle="overFullScreen"
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View>
-              <View style={styles.filterCross}>
-                <View style={styles.filterView}>
-                  <Text style={styles.filterText}>Filter</Text>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          presentationStyle="overFullScreen"
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View>
+                <View style={styles.filterCross}>
+                  <View style={styles.filterView}>
+                    <Text style={styles.filterText}>Filter</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.crossView}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Ionicons name="md-close" color="#000" size={25} />
+                  </TouchableOpacity>
                 </View>
+                <View>
+                  <Text style={styles.filterHead}>Review ({seekbarValue})</Text>
+                  <Slider
+                    value={seekbarValue}
+                    minimumValue={0}
+                    maximumValue={5}
+                    step={1}
+                    onSlidingComplete={value => {
+                      setSeekbarValue(value);
+                    }}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.filterHead}>Type</Text>
+                  <CheckBox
+                    title="Free"
+                    checked={checked}
+                    onPress={() => setChecked({checked: !checked})}
+                  />
+
+                  <CheckBox
+                    title="Paid"
+                    checked={checked}
+                    onPress={() => setChecked({checked: !checked})}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.filterHead}>Format</Text>
+                  <CheckBox
+                    title="Video"
+                    checked={checked}
+                    onPress={() => setChecked({checked: !checked})}
+                  />
+                  <CheckBox
+                    title="Text"
+                    checked={checked}
+                    onPress={() => setChecked({checked: !checked})}
+                  />
+                </View>
+
+                <View>
+                  <Text style={styles.filterHead}>Not Older Than</Text>
+                  <Picker
+                    dropdownIconColor={'black'}
+                    style={{backgroundColor: '#fff', color: '#000'}}
+                    selectedValue={selectedLanguage}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedLanguage(itemValue)
+                    }>
+                    <Picker.Item label="Java" value="java" />
+                    <Picker.Item label="JavaScript" value="js" />
+                  </Picker>
+                </View>
+
+                <View>
+                  <Text style={styles.filterHead}>Language</Text>
+                  <Picker
+                    dropdownIconColor={'black'}
+                    style={{backgroundColor: '#fff', color: '#000'}}
+                    selectedValue={selectedLanguage}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedLanguage(itemValue)
+                    }>
+                    <Picker.Item label="Java" value="java" />
+                    <Picker.Item label="JavaScript" value="js" />
+                  </Picker>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.applyTouch}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.applyText}>Apply</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* <=======Latest Blogs =========> */}
+        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
+          <View style={styles.topHeding}>
+            <Text style={styles.title}>Promotions</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Promotion List')}>
+              <Text style={styles.viewAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+            {promotion?.map(promo => (
+              <View style={styles.sliderImg} key={promo?._id}>
                 <TouchableOpacity
-                  style={styles.crossView}
-                  onPress={() => setModalVisible(!modalVisible)}>
-                  <Ionicons name="md-close" color="#000" size={25} />
+                  onPress={() =>
+                    navigation.navigate('Resource Detail', {id: promo._id})
+                  }>
+                  <Image
+                    style={styles.slider}
+                    source={{uri: `${promo?.img}`}}
+                  />
+                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
                 </TouchableOpacity>
               </View>
-              <View>
-                <Text style={styles.filterHead}>Review ({seekbarValue})</Text>
-                <Slider
-                  value={seekbarValue}
-                  minimumValue={0}
-                  maximumValue={5}
-                  step={1}
-                  onSlidingComplete={value => {
-                    setSeekbarValue(value);
-                  }}
-                />
-              </View>
-              <View>
-                <Text style={styles.filterHead}>Type</Text>
-                <CheckBox
-                  title="Free"
-                  checked={checked}
-                  onPress={() => setChecked({checked: !checked})}
-                />
-
-                <CheckBox
-                  title="Paid"
-                  checked={checked}
-                  onPress={() => setChecked({checked: !checked})}
-                />
-              </View>
-              <View>
-                <Text style={styles.filterHead}>Format</Text>
-                <CheckBox
-                  title="Video"
-                  checked={checked}
-                  onPress={() => setChecked({checked: !checked})}
-                />
-                <CheckBox
-                  title="Text"
-                  checked={checked}
-                  onPress={() => setChecked({checked: !checked})}
-                />
-              </View>
-
-              <View>
-                <Text style={styles.filterHead}>Not Older Than</Text>
-                <Picker
-                  dropdownIconColor={'black'}
-                  style={{backgroundColor: '#fff', color: '#000'}}
-                  selectedValue={selectedLanguage}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedLanguage(itemValue)
-                  }>
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              </View>
-
-              <View>
-                <Text style={styles.filterHead}>Language</Text>
-                <Picker
-                  dropdownIconColor={'black'}
-                  style={{backgroundColor: '#fff', color: '#000'}}
-                  selectedValue={selectedLanguage}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedLanguage(itemValue)
-                  }>
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.applyTouch}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.applyText}>Apply</Text>
-            </TouchableOpacity>
-          </View>
+            ))}
+          </ScrollView>
         </View>
-      </Modal>
 
-      {/* <=======Latest Blogs =========> */}
-      <View style={{paddingVertical: 10, marginHorizontal: 10}}>
+        {/* <=======Latest Blogs =========> */}
+
         <View style={styles.topHeding}>
-          <Text style={styles.title}>Promotions</Text>
+          <Text style={styles.title}>Searching Product</Text>
         </View>
-        <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-          <View style={styles.sliderImg}>
+        <FlatGrid
+          itemDimension={150}
+          data={items}
+          style={styles.gridView}
+          //staticDimension={350}
+          //fixed
+          spacing={10}
+          renderItem={({item}) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Blog Detail')}>
-              <Image
-                style={styles.slider}
-                source={require('../../assets/images/pool.jpg')}
-              />
-              <Text style={styles.sliderTitle}>Sports</Text>
+              style={styles.card}
+              key={item._id}
+              onPress={() =>
+                navigation.navigate('Resource Detail', {id: item._id})
+              }>
+              <Image style={styles.userImage} source={{uri: `${item?.img}`}} />
+              <View style={styles.cardFooter}>
+                <Text style={styles.name}>{item.resTitle}</Text>
+              </View>
+              <View style={styles.cardFooter}>
+                <Text style={styles.name1}>Created By: {item.creatorName}</Text>
+              </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.sliderImg}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Blog Detail')}>
-              <Image
-                style={styles.slider}
-                source={require('../../assets/images/pmjay.jpg')}
-              />
-              <Text style={styles.sliderTitle}>Goverment</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.sliderImg}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Blog Detail')}>
-              <Image
-                style={styles.slider}
-                source={require('../../assets/images/god-of-war.jpeg')}
-              />
-              <Text style={styles.sliderTitle}>Games</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.sliderImg}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Blog Detail')}>
-              <Image
-                style={styles.slider}
-                source={require('../../assets/images/god-of-war.jpeg')}
-              />
-              <Text style={styles.sliderTitle}>Demo</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+          )}
+        />
 
-      {/* <=======Latest Blogs =========> */}
-
-      <View style={styles.topHeding}>
-        <Text style={styles.title}>Searching Product</Text>
-      </View>
-      <FlatGrid
-        itemDimension={150}
-        data={items}
-        style={styles.gridView}
-        //staticDimension={350}
-        //fixed
-        spacing={10}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.card}
-            key={item._id}
-            onPress={() =>
-              navigation.navigate('Resource Detail', {id: item._id})
-            }>
-            <Image style={styles.userImage} source={{uri: `${item?.img}`}} />
-            <View style={styles.cardFooter}>
-              <Text style={styles.name}>{item.resTitle}</Text>
-            </View>
-            <View style={styles.cardFooter}>
-              <Text style={styles.name1}>Created By: {item.creatorName}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+        {/* <=======Latest Blogs =========> */}
+        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
+          <View style={styles.topHeding}>
+            <Text style={styles.title}>Suggestion</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Promotion List')}>
+              <Text style={styles.viewAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+            {promotion?.map(promo => (
+              <View style={styles.sliderImg} key={promo?._id}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Resource Detail', {id: promo._id})
+                  }>
+                  <Image
+                    style={styles.slider}
+                    source={{uri: `${promo?.img}`}}
+                  />
+                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -258,7 +279,8 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     backgroundColor: 'white',
     marginHorizontal: 5,
-    height: 180,
+    height: 200,
+    borderRadius: 10,
   },
   cardFooter: {
     paddingVertical: 5,
@@ -273,7 +295,7 @@ const styles = StyleSheet.create({
   userImage: {
     height: 120,
     width: '100%',
-    borderRadius: 0,
+    borderRadius: 10,
     alignSelf: 'center',
   },
   name: {
@@ -303,6 +325,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  viewAll: {
+    color: '#6F6F6F',
+    fontSize: 15,
+    fontWeight: '500',
   },
   slider: {
     width: 140,

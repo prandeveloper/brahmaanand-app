@@ -31,6 +31,7 @@ import ResourceList from '../screens/HomePage/ResourceList';
 import ResourceDetail from '../screens/HomePage/ResourceDetail';
 import ProfileView from '../screens/settingPages/ProfileView';
 import ReviewList from '../screens/HomePage/ReviewList';
+import PromotionList from '../screens/HomePage/PromotionList';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -81,6 +82,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="Resource List"
         component={ResourceList}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Promotion List"
+        component={PromotionList}
         options={{headerShown: true}}
       />
       <Stack.Screen

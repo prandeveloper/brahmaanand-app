@@ -246,6 +246,10 @@ const ResourceDetail = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
 
+        <TouchableOpacity style={styles.likeBtnColor}>
+          <Text style={styles.likeBtnText}>Like</Text>
+        </TouchableOpacity>
+
         <View style={styles.commentView}>
           <View style={styles.commentOneView}>
             <Text style={styles.commentOneText}>
@@ -345,6 +349,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     elevation: 1,
     padding: 2,
+  },
+  likeBtnColor: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  likeBtnText: {
+    backgroundColor: 'red',
+    color: '#fff',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    fontWeight: '700',
+    fontSize: 15,
+    borderRadius: 10,
+    elevation: 5,
   },
   iconView: {
     justifyContent: 'center',
