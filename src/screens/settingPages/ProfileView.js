@@ -12,25 +12,74 @@ import {
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'react-moment';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Bookmark from './Bookmark';
-
-// function Photos() {
-//   return <Text style={{color: '#000'}}> Hello</Text>;
-// }
-
-// function Albums() {
-//   return <Text style={{color: '#000'}}> Hello</Text>;
-// }
-
-// function Tags() {
-//   return <Text style={{color: '#000'}}> Hello</Text>;
-// }
-const Tab = createMaterialTopTabNavigator();
+import {FlatGrid} from 'react-native-super-grid';
 
 export default function ProfileView({navigation}) {
   const [user, setUser] = useState('');
   const [id, setId] = useState('');
+  const [showContent, setShowContent] = useState('Photos');
+  const [items, setItems] = useState([]);
+
+  const getResourceList = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/my_likes/${id}`)
+      .then(response => {
+        console.log('aaaaaa', response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  function Photos() {
+    return <Text style={{color: '#000'}}> Hello</Text>;
+  }
+
+  const BookMark = () => {
+    return (
+      <ScrollView>
+        <View>
+          <FlatGrid
+            itemDimension={150}
+            data={items}
+            style={styles.gridView}
+            //staticDimension={350}
+            //fixed
+            spacing={10}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.card}
+                key={item._id}
+                // onPress={() =>
+                //   navigation.navigate('Resource Detail', {id: item._id})
+                // }
+              >
+                <Image
+                  style={styles.userImage}
+                  source={{uri: `${item?.submitresrcId?.img}`}}
+                />
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name}>
+                    {item.submitresrcId?.resTitle}
+                  </Text>
+                </View>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name1}>
+                    Created By: {item.submitresrcId?.creatorName}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </ScrollView>
+    );
+  };
+
+  function Tags() {
+    return <Text style={{color: '#000'}}> Hello</Text>;
+  }
 
   const getData = async () => {
     try {
@@ -61,6 +110,7 @@ export default function ProfileView({navigation}) {
   useEffect(() => {
     getData();
     getUser();
+    getResourceList();
   }, [id]);
 
   return (
@@ -117,24 +167,39 @@ export default function ProfileView({navigation}) {
             </View>
             {/* Profile Content */}
             <View style={{marginTop: 20}}>
-              <Tab.Navigator
-                screenOptions={{
-                  tabBarLabelStyle: {
-                    fontSize: 11,
-                    color: '#000',
-                    fontWeight: '600',
-                  },
-                  tabBarItemStyle: {width: 130},
-                  tabBarScrollEnabled: true,
-                  tabBarIndicatorStyle: {
-                    backgroundColor: '#000',
-                  },
-                  tabBarStyle: {backgroundColor: '#FFF'},
-                }}>
-                <Tab.Screen name="Video Posted" component={Bookmark} />
-                <Tab.Screen name="BookMarks" component={Bookmark} />
-                <Tab.Screen name="Points" component={Bookmark} />
-              </Tab.Navigator>
+              <View style={styles.profileContentButtonsView}>
+                <TouchableOpacity
+                  style={{
+                    ...styles.showContentButton,
+                    borderBottomWidth: showContent === 'Photos' ? 2 : 0,
+                  }}
+                  onPress={() => setShowContent('Photos')}>
+                  <Text style={styles.showContentButtonText}>Photos</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.showContentButton,
+                    borderBottomWidth: showContent === 'BookMark' ? 2 : 0,
+                  }}
+                  onPress={() => setShowContent('BookMark')}>
+                  <Text style={styles.showContentButtonText}>BookMark</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.showContentButton,
+                    borderBottomWidth: showContent === 'Tags' ? 2 : 0,
+                  }}
+                  onPress={() => setShowContent('Tags')}>
+                  <Text style={styles.showContentButtonText}>Tags</Text>
+                </TouchableOpacity>
+              </View>
+              {showContent === 'Photos' ? (
+                <Photos photos={new Array(13).fill(1)} />
+              ) : showContent === 'BookMark' ? (
+                <BookMark />
+              ) : (
+                <Tags photos={new Array(23).fill(1)} />
+              )}
             </View>
           </View>
         </>
@@ -216,5 +281,51 @@ const styles = StyleSheet.create({
   showContentButtonText: {
     fontSize: 15,
     color: '#000',
+  },
+  //grid View
+  gridView: {
+    flex: 1,
+  },
+  card: {
+    elevation: 5,
+    marginVertical: 2,
+    backgroundColor: 'white',
+    marginHorizontal: 5,
+    height: 220,
+    borderRadius: 10,
+  },
+  cardFooter: {
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderTopLeftRadius: 1,
+    borderTopRightRadius: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  userImage: {
+    height: 120,
+    width: '100%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  },
+  name: {
+    fontSize: 16,
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    color: '#000',
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  name1: {
+    fontSize: 12,
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    color: '#000',
+    fontWeight: '500',
+    textTransform: 'capitalize',
   },
 });

@@ -130,6 +130,7 @@ const HomeStack = () => {
           title: route.params?.title,
         })}
       />
+
       <Stack.Screen
         name="Profile"
         component={ProfileView}
@@ -137,16 +138,18 @@ const HomeStack = () => {
           title: route.params?.title,
         })}
       />
+
       <Stack.Screen
-        name="Bookmark"
-        component={Bookmark}
+        name="My Profile"
+        component={MyProfile}
         options={({route}) => ({
           title: route.params?.title,
         })}
       />
+
       <Stack.Screen
-        name="My Profile"
-        component={MyProfile}
+        name="BookMark"
+        component={Bookmark}
         options={({route}) => ({
           title: route.params?.title,
         })}

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,45 +46,20 @@ const Bookmark = () => {
     getResourceList();
   }, []);
   return (
-    <ScrollView>
+    <SafeAreaView style={styles.container}>
       <View>
-        <FlatGrid
-          itemDimension={150}
-          data={items}
-          style={styles.gridView}
-          //staticDimension={350}
-          //fixed
-          spacing={10}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={styles.card}
-              key={item._id}
-              onPress={() =>
-                navigation.navigate('Resource Detail', {id: item._id})
-              }>
-              <Image
-                style={styles.userImage}
-                source={{uri: `${item?.submitresrcId?.img}`}}
-              />
-              <View style={styles.cardFooter}>
-                <Text style={styles.name}>{item.submitresrcId?.resTitle}</Text>
-              </View>
-              <View style={styles.cardFooter}>
-                <Text style={styles.name1}>
-                  Created By: {item.submitresrcId?.creatorName}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+        <Text style={{color: '#000', backgroundColor: 'red'}}>Hello</Text>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default Bookmark;
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'red',
+  },
   gridView: {
     flex: 1,
   },
@@ -135,3 +111,37 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+{
+  /* <View>
+        <FlatGrid
+          itemDimension={150}
+          data={items}
+          style={styles.gridView}
+          //staticDimension={350}
+          //fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.card}
+              key={item._id}
+              onPress={() =>
+                navigation.navigate('Resource Detail', {id: item._id})
+              }>
+              <Image
+                style={styles.userImage}
+                source={{uri: `${item?.submitresrcId?.img}`}}
+              />
+              <View style={styles.cardFooter}>
+                <Text style={styles.name}>{item.submitresrcId?.resTitle}</Text>
+              </View>
+              <View style={styles.cardFooter}>
+                <Text style={styles.name1}>
+                  Created By: {item.submitresrcId?.creatorName}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View> */
+}
