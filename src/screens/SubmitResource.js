@@ -25,17 +25,6 @@ import axios from 'axios';
 import {MultiSelect} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const data = [
-//   {label: 'Item 1', value: '1'},
-//   {label: 'Item 2', value: '2'},
-//   {label: 'Item 3', value: '3'},
-//   {label: 'Item 4', value: '4'},
-//   {label: 'Item 5', value: '5'},
-//   {label: 'Item 6', value: '6'},
-//   {label: 'Item 7', value: '7'},
-//   {label: 'Item 8', value: '8'},
-// ];
-
 const SubmitResource = ({navigation}) => {
   const [url, setUrl] = useState('');
   const [type, setType] = useState();
@@ -57,14 +46,14 @@ const SubmitResource = ({navigation}) => {
   const [data, setData] = useState();
   const [selected, setSelected] = useState([]);
 
-  console.log(selected);
+  // console.log(selected);
 
   const getData = async () => {
     try {
       const user = await AsyncStorage.getItem('userId');
       if (user !== null) {
         //console.log('success');
-        //console.log(user);
+        console.log('userid', user);
         setData(user);
       }
     } catch (e) {
@@ -138,7 +127,7 @@ const SubmitResource = ({navigation}) => {
     axios
       .get(`http://43.205.82.226:9000/user/allLang`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setLang(response.data.data);
       })
       .catch(error => {
@@ -152,7 +141,7 @@ const SubmitResource = ({navigation}) => {
     getSubCategory();
     getYear();
     getLanguage();
-  }, [category, data]);
+  }, [category]);
 
   function submit() {
     resourceSubmit();
@@ -174,39 +163,32 @@ const SubmitResource = ({navigation}) => {
       desc,
       comment,
     );
-    const data = new FormData();
-    data.append('userid', data);
-    data.append('link', url);
-    data.append('category', category);
-    data.append('sub_category', subCategory);
-    data.append('type', type);
-    data.append('format', format);
-    data.append('language', selected);
-    data.append('topics', topic);
-    data.append('resTitle', title);
-    data.append('creatorName', name);
-    data.append('relYear', upYear);
-    data.append('res_desc', desc);
-    data.append('comment', comment);
-    data.append('img', singleFile.assets[0].base64);
-    fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
-      method: 'post',
-      headers: {'Content-Type': 'multipart/form-data'},
-      body: data,
-    })
-      .then(response => {
-        response.json().then(res => {
-          console.log(res);
-          // if (res.message === 'success') {
-          //   Alert.alert('Image Uploaded Successfully👍');
-          // } else {
-          //   Alert.alert('Something went wrong');
-          // }
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // const data = new FormData();
+    // data.append('userid', data);
+    // data.append('link', url);
+    // data.append('category', category);
+    // data.append('sub_category', subCategory);
+    // data.append('type', type);
+    // data.append('format', format);
+    // data.append('language', selected);
+    // data.append('topics', topic);
+    // data.append('resTitle', title);
+    // data.append('creatorName', name);
+    // data.append('relYear', upYear);
+    // data.append('res_desc', desc);
+    // data.append('comment', comment);
+    // data.append('img', singleFile.assets[0].base64);
+    // fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
+    //   method: 'post',
+    //   headers: {'Content-Type': 'multipart/form-data'},
+    //   body: data,
+    // })
+    //   .then(response => {
+    //     console.log(response);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   return (

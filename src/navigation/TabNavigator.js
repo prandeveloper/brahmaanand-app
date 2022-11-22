@@ -9,6 +9,7 @@ import TopSheme from '../screens/TopSheme';
 import SubmitResource from '../screens/SubmitResource';
 import Setting from '../screens/Setting';
 import LeaderBoard from '../screens/leaderBoard/LeaderBoard';
+import SearchPage from '../screens/SearchPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Search"
-        component={HomeScreen}
+        component={SearchPage}
         options={{
           // tabBarBadge: 3,
           tabBarBadgeStyle: {backgroundColor: 'yellow'},

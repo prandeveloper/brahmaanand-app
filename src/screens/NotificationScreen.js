@@ -1,93 +1,113 @@
-import React from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ScrollView, Image } from 'react-native';
-import BackHeader from '../components/BackHeader';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
+import Moment from 'react-moment';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const NotificationScreen = ({navigation}) => {
-    return (
-        <SafeAreaView style={styles.container} >
-            <BackHeader label={'Notification'} onPress={() => navigation.goBack()} />
-            <ScrollView>
-                <View style={styles.swiming}>
-                    <Text style={styles.swimingTxt} >New Scheme Alert: Pradhan Mantri Jan Arogya Yojana</Text>
-                    <Text style={styles.txt}>PM-JAY refers to a specialised health insurance policy, which is available to all economically-challenged citizens of India. One such household can claim medical insurance coverage of up to Rs.5 lakh per year by paying premiums of Rs.30 annually.
-                    </Text>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:5}} >
-                        <Text style={{color:'#4586FF'}} >20/8/2022</Text>
-                        <Text style={{color:'#4586FF'}}>10:00 AM</Text>
-                    </View>
-                </View>
-                <View style={styles.swiming}>
-                    <Text style={styles.swimingTxt} >Your Follow-up with Dr. John Doe is next week.Book your appointment now.</Text>
-                </View>
-                <View style={[styles.secondSection]}>
-                    <Image style={{
-                        width: 100,
-                        height: 150,
-                        borderRadius: 15
-                    }} source={require('../assets/images/FarCry6.png')} />
-                    <View style={styles.leftSection}>
-                        <Text style={styles.swimingTxt}>Anaerobic exercise: What it is and how it affects the body</Text>
-                        <Text style={styles.txt}>You’ve most likely heard of anaerobic exercise before, but how much do you know about the science behind this vital aspect of your physical fitness? Enhancing your comprehension of the anaerobic energy system is a sure-fire way to empower yourself and give your workouts a boost.</Text>
-                    </View>
-                </View>
-                <View >
-                <Image style={styles.banner} source={require('../assets/images/departmentHospital.png')} />
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
-}
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    poolimg: {
-        width: '100%',
-        height: 100,
-        alignSelf: 'center',
-        borderRadius: 20
-    },
-    swiming: {
-        height: 'auto', width: '95%', justifyContent: 'center',
-        backgroundColor: '#fff', padding: 10,
-        alignSelf: 'center', borderRadius: 10, shadowColor: 'blue',
-        elevation: 7,
-        shadowRadius: 10,
-        marginTop: 10
-    },
-    swimingTxt: {
-        color: '#4584FF',
-        fontFamily: 'Roboto-Medium',
-        marginBottom: 5
-    },
-    txt: {
-        color: 'black',
-        fontSize: 12,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    secondSection:{
-        height: 'auto',
-         width: '95%',
-         backgroundColor: '#fff', 
-         padding: 10,
-        alignSelf: 'center', 
-        borderRadius: 10, 
-        shadowColor: 'blue',
-        elevation: 7,
-        shadowRadius: 10,
-        flexDirection:'row',
-        marginVertical:10,
-        justifyContent:'space-between',
-        alignItems:'center'
-        
-      },
-      leftSection:{
-        height: 'auto', width: '75%', padding: 10,
-      },
-      banner:{
-        width:'95%',height:150,borderRadius:10,alignSelf:'center'
-      }
-})
+const NotificationScreen = () => {
+  const [notify, setNotify] = useState([]);
+
+  const getNotification = () => {
+    axios
+      .get(`http://3.7.173.138:9000/admin/get_notification`)
+      .then(response => {
+        console.log(response.data.data);
+        setNotify(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getNotification();
+  }, []);
+
+  return (
+    <FlatList
+      style={styles.root}
+      data={notify}
+      ItemSeparatorComponent={() => {
+        return <View style={styles.separator} />;
+      }}
+      keyExtractor={item => {
+        return item.id;
+      }}
+      renderItem={item => {
+        const Notification = item.item;
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity style={styles.iconTouch} onPress={() => {}}>
+              <Icon name="bell" color={'#000'} size={25} />
+            </TouchableOpacity>
+            <View style={styles.content}>
+              <View style={styles.contentHeader}>
+                <Text style={styles.name}>{Notification?.title}</Text>
+                <Text style={styles.time}>
+                  <Moment element={Text} format="lll">
+                    {Notification?.createdAt}
+                  </Moment>
+                </Text>
+              </View>
+              <Text style={{color: '#000'}}>{Notification?.desc}</Text>
+            </View>
+          </View>
+        );
+      }}
+    />
+  );
+};
 
 export default NotificationScreen;
+
+const styles = StyleSheet.create({
+  root: {
+    backgroundColor: '#ffffff',
+    marginTop: 10,
+  },
+  container: {
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  iconTouch: {
+    marginTop: 10,
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
+  },
+  image: {
+    width: 45,
+    height: 45,
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  time: {
+    fontSize: 11,
+    color: '#000',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+});

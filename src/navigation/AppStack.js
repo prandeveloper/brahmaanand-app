@@ -33,6 +33,7 @@ import ProfileView from '../screens/settingPages/ProfileView';
 import ReviewList from '../screens/HomePage/ReviewList';
 import PromotionList from '../screens/HomePage/PromotionList';
 import Bookmark from '../screens/settingPages/Bookmark';
+import SearchPage from '../screens/SearchPage';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -69,6 +70,11 @@ const HomeStack = () => {
         name="Home"
         component={TabNavigator}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Search"
+        component={SearchPage}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="Category"
@@ -109,11 +115,6 @@ const HomeStack = () => {
         name="Blog Detail"
         component={BlogDetail}
         options={{headerShown: true}}
-      />
-      <Stack.Screen
-        name="NotificationScreen"
-        component={NotificationScreen}
-        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -164,6 +165,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="Contact Us"
         component={ContactUs}
+        options={({route}) => ({
+          title: route.params?.title,
+        })}
+      />
+      <Stack.Screen
+        name="Notification"
+        component={NotificationScreen}
         options={({route}) => ({
           title: route.params?.title,
         })}

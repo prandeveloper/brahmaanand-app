@@ -100,19 +100,11 @@ export default function HomeScreen({navigation}) {
         />
         {/* <======= Search =========> */}
         <View style={{paddingVertical: 20}}>
-          <View style={styles.searchMain}>
-            {/* <View>
-              <Text style={styles.searchText}>Search</Text>
-            </View> */}
-            <View>
-              <Searchbar
-                placeholder="Search"
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-                style={styles.searchInput}
-              />
-            </View>
-          </View>
+          <TouchableOpacity
+            style={styles.searchMain}
+            onPress={() => navigation.navigate('Search')}>
+            <Text style={{color: 'gray', fontSize: 16}}>Search</Text>
+          </TouchableOpacity>
         </View>
 
         {/* <=======HashTag=========> */}
@@ -250,7 +242,12 @@ const styles = StyleSheet.create({
   searchMain: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    marginHorizontal: 15,
+    borderRadius: 20,
+    height: 55,
+    paddingHorizontal: 10,
   },
   searchText: {
     color: '#FC9358',
