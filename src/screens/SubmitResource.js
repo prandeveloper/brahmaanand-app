@@ -27,23 +27,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubmitResource = ({navigation}) => {
   const [url, setUrl] = useState('');
-  const [type, setType] = useState();
-  const [format, setFormat] = useState();
+  const [type, setType] = useState('');
+  const [format, setFormat] = useState('');
   const [category, setCategory] = useState('');
-  const [subCategory, setSubCategory] = useState();
+  const [subCategory, setSubCategory] = useState('');
   const [topic, setTopic] = useState('');
   const [title, setTitle] = useState('');
   const [name, setName] = useState('');
-  const [upYear, setUpYear] = useState();
+  const [upYear, setUpYear] = useState('');
   const [desc, setDesc] = useState('');
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
   const [singleFile, setSingleFile] = useState('');
   const [catList, setCatList] = useState([]);
   const [subCatList, setSubCatList] = useState([]);
   const [yearList, setYearList] = useState([]);
   const [lang, setLang] = useState([]);
-  const [data, setData] = useState();
+  const [userID, setUserID] = useState('');
   const [selected, setSelected] = useState([]);
 
   // console.log(selected);
@@ -53,8 +53,8 @@ const SubmitResource = ({navigation}) => {
       const user = await AsyncStorage.getItem('userId');
       if (user !== null) {
         //console.log('success');
-        console.log('userid', user);
-        setData(user);
+        console.log('userID', user);
+        setUserID(user);
       }
     } catch (e) {
       console.log('no Value in Signup');
@@ -141,7 +141,7 @@ const SubmitResource = ({navigation}) => {
     getSubCategory();
     getYear();
     getLanguage();
-  }, [category]);
+  }, [userID, category]);
 
   function submit() {
     resourceSubmit();
@@ -155,7 +155,7 @@ const SubmitResource = ({navigation}) => {
       category,
       subCategory,
       url,
-      data,
+      userID,
       topic,
       title,
       name,
@@ -163,32 +163,36 @@ const SubmitResource = ({navigation}) => {
       desc,
       comment,
     );
-    // const data = new FormData();
-    // data.append('userid', data);
-    // data.append('link', url);
-    // data.append('category', category);
-    // data.append('sub_category', subCategory);
-    // data.append('type', type);
-    // data.append('format', format);
-    // data.append('language', selected);
-    // data.append('topics', topic);
-    // data.append('resTitle', title);
-    // data.append('creatorName', name);
-    // data.append('relYear', upYear);
-    // data.append('res_desc', desc);
-    // data.append('comment', comment);
-    // data.append('img', singleFile.assets[0].base64);
-    // fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
-    //   method: 'post',
-    //   headers: {'Content-Type': 'multipart/form-data'},
-    //   body: data,
-    // })
-    //   .then(response => {
-    //     console.log(response);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    const data = new FormData();
+    data.append('userid', userID);
+    data.append('link', url);
+    data.append('category', category);
+    data.append('sub_category', subCategory);
+    data.append('type', type);
+    data.append('format', format);
+    data.append('language', selected);
+    data.append('topics', topic);
+    data.append('resTitle', title);
+    data.append('creatorName', name);
+    data.append('relYear', upYear);
+    data.append('res_desc', desc);
+    data.append('comment', comment);
+    data.append('img', singleFile.assets[0].base64);
+    fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
+      method: 'POST',
+      body: data,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => {
+        response.json().then(res => {
+          console.log(res.data);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (

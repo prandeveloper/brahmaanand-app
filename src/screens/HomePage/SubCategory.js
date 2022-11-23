@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    height: 150,
+    height: 180,
   },
   itemView: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-start',

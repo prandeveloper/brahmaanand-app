@@ -117,29 +117,58 @@ const Setting = ({navigation}) => {
             )}
           </View>
         </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate('Profile')}>
-            <View style={styles.eachSection}>
-              <Ionicons
-                name="person-sharp"
-                size={25}
-                color={'#FC9358'}
-                style={{marginLeft: 10}}
-              />
-              <Text style={styles.btntxt}>My Profile</Text>
-            </View>
-            <View>
-              <Ionicons
-                name="chevron-forward-outline"
-                size={22}
-                color={'#000'}
-                style={{marginRight: 20}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+        {user.username != '' &&
+        user.username != null &&
+        user.username != undefined ? (
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => navigation.navigate('Profile')}>
+              <View style={styles.eachSection}>
+                <Ionicons
+                  name="person-sharp"
+                  size={25}
+                  color={'#FC9358'}
+                  style={{marginLeft: 10}}
+                />
+                <Text style={styles.btntxt}>My Profile</Text>
+              </View>
+              <View>
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={22}
+                  color={'#000'}
+                  style={{marginRight: 20}}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => navigation.navigate('Login')}>
+              <View style={styles.eachSection}>
+                <Ionicons
+                  name="person-sharp"
+                  size={25}
+                  color={'#FC9358'}
+                  style={{marginLeft: 10}}
+                />
+                <Text style={styles.btntxt}>Login</Text>
+              </View>
+              <View>
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={22}
+                  color={'#000'}
+                  style={{marginRight: 20}}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btn}

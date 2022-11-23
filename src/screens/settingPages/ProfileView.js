@@ -17,8 +17,9 @@ import {FlatGrid} from 'react-native-super-grid';
 export default function ProfileView({navigation}) {
   const [user, setUser] = useState('');
   const [id, setId] = useState('');
-  const [showContent, setShowContent] = useState('Photos');
+  const [showContent, setShowContent] = useState('VideoPosted');
   const [items, setItems] = useState([]);
+  const [point, setPoint] = useState();
 
   const getResourceList = () => {
     axios
@@ -32,53 +33,67 @@ export default function ProfileView({navigation}) {
       });
   };
 
-  function Photos() {
+  const getPoints = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/my_content_meteros/${id}`)
+      .then(response => {
+        console.log('points', response.data);
+        setPoint(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  function VideoPosted() {
     return <Text style={{color: '#000'}}> Hello</Text>;
   }
 
   const BookMark = () => {
     return (
-      <ScrollView>
-        <View>
-          <FlatGrid
-            itemDimension={150}
-            data={items}
-            style={styles.gridView}
-            //staticDimension={350}
-            //fixed
-            spacing={10}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                style={styles.card}
-                key={item._id}
-                // onPress={() =>
-                //   navigation.navigate('Resource Detail', {id: item._id})
-                // }
-              >
-                <Image
-                  style={styles.userImage}
-                  source={{uri: `${item?.submitresrcId?.img}`}}
-                />
-                <View style={styles.cardFooter}>
-                  <Text style={styles.name}>
-                    {item.submitresrcId?.resTitle}
-                  </Text>
-                </View>
-                <View style={styles.cardFooter}>
-                  <Text style={styles.name1}>
-                    Created By: {item.submitresrcId?.creatorName}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      </ScrollView>
+      <View>
+        <FlatGrid
+          itemDimension={150}
+          data={items}
+          style={styles.gridView}
+          //staticDimension={350}
+          //fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.card}
+              key={item._id}
+              onPress={() =>
+                navigation.navigate('Resource Detail', {
+                  id: item.submitresrcId?._id,
+                })
+              }>
+              <Image
+                style={styles.userImage}
+                source={{uri: `${item?.submitresrcId?.img}`}}
+              />
+              <View style={styles.cardFooter}>
+                <Text style={styles.name}>{item.submitresrcId?.resTitle}</Text>
+              </View>
+              <View style={styles.cardFooter}>
+                <Text style={styles.name1}>
+                  Created By: {item.submitresrcId?.creatorName}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     );
   };
 
-  function Tags() {
-    return <Text style={{color: '#000'}}> Hello</Text>;
+  function Points() {
+    return (
+      <View style={styles.pointView}>
+        <Text style={styles.pointText}>Total Meteors Points</Text>
+        <Text style={styles.pointNumber}>{point?.meteors}</Text>
+      </View>
+    );
   }
 
   const getData = async () => {
@@ -111,6 +126,7 @@ export default function ProfileView({navigation}) {
     getData();
     getUser();
     getResourceList();
+    getPoints();
   }, [id]);
 
   return (
@@ -171,10 +187,10 @@ export default function ProfileView({navigation}) {
                 <TouchableOpacity
                   style={{
                     ...styles.showContentButton,
-                    borderBottomWidth: showContent === 'Photos' ? 2 : 0,
+                    borderBottomWidth: showContent === 'VideoPosted' ? 2 : 0,
                   }}
-                  onPress={() => setShowContent('Photos')}>
-                  <Text style={styles.showContentButtonText}>Photos</Text>
+                  onPress={() => setShowContent('VideoPosted')}>
+                  <Text style={styles.showContentButtonText}>Video Posted</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -187,18 +203,18 @@ export default function ProfileView({navigation}) {
                 <TouchableOpacity
                   style={{
                     ...styles.showContentButton,
-                    borderBottomWidth: showContent === 'Tags' ? 2 : 0,
+                    borderBottomWidth: showContent === 'Points' ? 2 : 0,
                   }}
-                  onPress={() => setShowContent('Tags')}>
-                  <Text style={styles.showContentButtonText}>Tags</Text>
+                  onPress={() => setShowContent('Points')}>
+                  <Text style={styles.showContentButtonText}>Points</Text>
                 </TouchableOpacity>
               </View>
-              {showContent === 'Photos' ? (
-                <Photos photos={new Array(13).fill(1)} />
+              {showContent === 'VideoPosted' ? (
+                <VideoPosted photos={new Array(13).fill(1)} />
               ) : showContent === 'BookMark' ? (
                 <BookMark />
               ) : (
-                <Tags photos={new Array(23).fill(1)} />
+                <Points />
               )}
             </View>
           </View>
@@ -327,5 +343,22 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '500',
     textTransform: 'capitalize',
+  },
+  pointView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 300,
+  },
+  pointText: {
+    color: '#000',
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 15,
+  },
+  pointNumber: {
+    color: '#000',
+    fontSize: 30,
+    fontWeight: '600',
   },
 });
