@@ -19,24 +19,32 @@ import Slider from 'react-native-slider';
 import {CheckBox} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import ShowMore from 'react-native-show-more-button';
+import {RadioButton} from 'react-native-paper';
 
 const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
-  console.log(id);
+  //console.log(id);
   const [items, setItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = query => setSearchQuery(query);
   const [modalVisible, setModalVisible] = useState(false);
   const [seekbarValue, setSeekbarValue] = useState(5);
-  const [checked, setChecked] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [type, setType] = useState('');
+  const [format, setFormat] = useState('');
+  const [selectYear, setSelectYear] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [promotion, setPromotion] = useState([]);
+  const [yearList, setYearList] = useState([]);
+  const [langList, setLangList] = useState([]);
+
+  // console.log(type);
+  // console.log(format);
 
   const getPromotion = () => {
     axios
       .get(`http://3.7.173.138:9000/user/Promotions`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setPromotion(response.data.data);
       })
       .catch(error => {
@@ -48,8 +56,32 @@ const ResourceList = ({route, navigation}) => {
     axios
       .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const getYear = () => {
+    axios
+      .get(`http://43.205.82.226:9000/user/allYear`)
+      .then(response => {
+        //console.log(response.data.data);
+        setYearList(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const getLanguage = () => {
+    axios
+      .get(`http://43.205.82.226:9000/user/allLang`)
+      .then(response => {
+        console.log(response.data.data);
+        setLangList(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -59,6 +91,8 @@ const ResourceList = ({route, navigation}) => {
   useEffect(() => {
     getResourceList();
     getPromotion();
+    getYear();
+    getLanguage();
   }, []);
 
   return (
@@ -115,30 +149,49 @@ const ResourceList = ({route, navigation}) => {
                 </View>
                 <View>
                   <Text style={styles.filterHead}>Type</Text>
-                  <CheckBox
-                    title="Free"
-                    checked={checked}
-                    onPress={() => setChecked({checked: !checked})}
-                  />
-
-                  <CheckBox
-                    title="Paid"
-                    checked={checked}
-                    onPress={() => setChecked({checked: !checked})}
-                  />
+                  <View style={styles.shippingItemsView}>
+                    <View style={styles.radioView}>
+                      <RadioButton
+                        value="paid"
+                        color="red"
+                        status={type === 'paid' ? 'checked' : 'unchecked'}
+                        onPress={() => setType('paid')}
+                      />
+                      <Text style={styles.radioLabelText}>Paid</Text>
+                    </View>
+                    <View style={styles.radioView}>
+                      <RadioButton
+                        value="free"
+                        color="red"
+                        status={type === 'free' ? 'checked' : 'unchecked'}
+                        onPress={() => setType('free')}
+                      />
+                      <Text style={styles.radioLabelText}>Free</Text>
+                    </View>
+                  </View>
                 </View>
                 <View>
                   <Text style={styles.filterHead}>Format</Text>
-                  <CheckBox
-                    title="Video"
-                    checked={checked}
-                    onPress={() => setChecked({checked: !checked})}
-                  />
-                  <CheckBox
-                    title="Text"
-                    checked={checked}
-                    onPress={() => setChecked({checked: !checked})}
-                  />
+                  <View style={styles.shippingItemsView}>
+                    <View style={styles.radioView}>
+                      <RadioButton
+                        value="text"
+                        color="red"
+                        status={format === 'text' ? 'checked' : 'unchecked'}
+                        onPress={() => setFormat('text')}
+                      />
+                      <Text style={styles.radioLabelText}>Text</Text>
+                    </View>
+                    <View style={styles.radioView}>
+                      <RadioButton
+                        value="video"
+                        color="red"
+                        status={format === 'video' ? 'checked' : 'unchecked'}
+                        onPress={() => setFormat('video')}
+                      />
+                      <Text style={styles.radioLabelText}>Video</Text>
+                    </View>
+                  </View>
                 </View>
 
                 <View>
@@ -146,12 +199,18 @@ const ResourceList = ({route, navigation}) => {
                   <Picker
                     dropdownIconColor={'black'}
                     style={{backgroundColor: '#fff', color: '#000'}}
-                    selectedValue={selectedLanguage}
+                    selectedValue={selectYear}
                     onValueChange={(itemValue, itemIndex) =>
-                      setSelectedLanguage(itemValue)
+                      setSelectYear(itemValue)
                     }>
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
+                    <Picker.Item label="Select Year" />
+                    {yearList?.map(year => (
+                      <Picker.Item
+                        key={year._id}
+                        label={year?.yrName}
+                        value={year._id}
+                      />
+                    ))}
                   </Picker>
                 </View>
 
@@ -164,8 +223,14 @@ const ResourceList = ({route, navigation}) => {
                     onValueChange={(itemValue, itemIndex) =>
                       setSelectedLanguage(itemValue)
                     }>
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
+                    <Picker.Item label="Select Language" />
+                    {langList.map(lang => (
+                      <Picker.Item
+                        key={lang._id}
+                        label={lang?.language}
+                        value={lang._id}
+                      />
+                    ))}
                   </Picker>
                 </View>
               </View>
@@ -416,5 +481,15 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     fontWeight: '600',
     borderRadius: 15,
+  },
+  //Radio
+  radioView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  radioLabelText: {
+    color: '#000',
+    fontWeight: '600',
   },
 });
