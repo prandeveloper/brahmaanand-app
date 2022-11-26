@@ -27,6 +27,7 @@ const ResourceDetail = ({route, navigation}) => {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState();
   const [data, setData] = useState();
+  const [myLike, setMyLike] = useState('');
 
   const getData = async () => {
     try {
@@ -39,6 +40,19 @@ const ResourceDetail = ({route, navigation}) => {
     } catch (e) {
       console.log('no Value in Signup');
     }
+  };
+
+  // <============ Get One Like ============>
+  const getOneLike = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/getone_mylikes/${data}/${id}`)
+      .then(response => {
+        console.log('LikeGet', response.data.data);
+        setMyLike(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
   // <========== Resource Detail =======>
   const getResourceDetail = () => {
@@ -70,6 +84,7 @@ const ResourceDetail = ({route, navigation}) => {
     getResourceDetail();
     getData();
     getAllReview();
+    getOneLike();
   }, []);
 
   // <==========Post a Likes=======>
@@ -79,10 +94,11 @@ const ResourceDetail = ({route, navigation}) => {
         .post(`http://3.7.173.138:9000/user/add_like`, {
           submitresrcId: id,
           userid: data,
-          status: true,
+          status: 'true',
         })
         .then(response => {
           console.log(response);
+          getResourceDetail();
         })
         .catch(error => {
           console.log(error);
@@ -99,13 +115,14 @@ const ResourceDetail = ({route, navigation}) => {
         .post(`http://3.7.173.138:9000/user/add_like`, {
           submitresrcId: id,
           userid: data,
-          status: true,
+          status: 'false',
         })
         .then(response => {
           console.log(response);
+          getResourceDetail();
         })
         .catch(error => {
-          console.log(error);
+          console.log(error.response.data);
         });
     } else {
       navigation.navigate('Login');
@@ -302,12 +319,15 @@ const ResourceDetail = ({route, navigation}) => {
         </View>
 
         <View>
-          <TouchableOpacity style={styles.likeBtnColor}>
-            <Text style={styles.likeBtnText}>Add BookMark</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.likeBtnColor}>
-            <Text style={styles.likeBtnText}>Remove BookMark</Text>
-          </TouchableOpacity>
+          {myLike.status === 'false' ? (
+            <TouchableOpacity style={styles.likeBtnColor} onPress={hitLike}>
+              <Text style={styles.likeBtnText}>Add BookMark</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.likeBtnColor} onPress={hitDisLike}>
+              <Text style={styles.likeBtnText}>Remove BookMark</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.commentView}>

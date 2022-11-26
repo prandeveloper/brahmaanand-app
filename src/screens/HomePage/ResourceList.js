@@ -37,9 +37,35 @@ const ResourceList = ({route, navigation}) => {
   const [yearList, setYearList] = useState([]);
   const [langList, setLangList] = useState([]);
 
-  // console.log(type);
+  //console.log(type);
   // console.log(format);
 
+  // <=========== Filter Api ============>
+  const getType = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/filter_type/${type}`)
+      .then(response => {
+        console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const getFormat = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/filterbyFormat/${format}`)
+      .then(response => {
+        console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  // <=========== Promotion ============>
   const getPromotion = () => {
     axios
       .get(`http://3.7.173.138:9000/user/Promotions`)
@@ -52,18 +78,7 @@ const ResourceList = ({route, navigation}) => {
       });
   };
 
-  const getResourceList = () => {
-    axios
-      .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
-      .then(response => {
-        //console.log(response.data.data);
-        setItems(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
+  // <=========== Year ============>
   const getYear = () => {
     axios
       .get(`http://43.205.82.226:9000/user/allYear`)
@@ -76,11 +91,12 @@ const ResourceList = ({route, navigation}) => {
       });
   };
 
+  // <=========== Language ============>
   const getLanguage = () => {
     axios
       .get(`http://43.205.82.226:9000/user/allLang`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setLangList(response.data.data);
       })
       .catch(error => {
@@ -89,11 +105,25 @@ const ResourceList = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    getResourceList();
+    // <=========== Resources ============>
+    if (type === '') {
+      axios
+        .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
+        .then(response => {
+          //console.log(response.data.data);
+          setItems(response.data.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+
     getPromotion();
     getYear();
     getLanguage();
-  }, []);
+    getType();
+    getFormat();
+  }, [type, format]);
 
   return (
     <ScrollView>
@@ -152,19 +182,19 @@ const ResourceList = ({route, navigation}) => {
                   <View style={styles.shippingItemsView}>
                     <View style={styles.radioView}>
                       <RadioButton
-                        value="paid"
+                        value="Paid"
                         color="red"
-                        status={type === 'paid' ? 'checked' : 'unchecked'}
-                        onPress={() => setType('paid')}
+                        status={type === 'Paid' ? 'checked' : 'unchecked'}
+                        onPress={() => setType('Paid')}
                       />
                       <Text style={styles.radioLabelText}>Paid</Text>
                     </View>
                     <View style={styles.radioView}>
                       <RadioButton
-                        value="free"
+                        value="Free"
                         color="red"
-                        status={type === 'free' ? 'checked' : 'unchecked'}
-                        onPress={() => setType('free')}
+                        status={type === 'Free' ? 'checked' : 'unchecked'}
+                        onPress={() => setType('Free')}
                       />
                       <Text style={styles.radioLabelText}>Free</Text>
                     </View>
@@ -295,7 +325,7 @@ const ResourceList = ({route, navigation}) => {
           renderItem={({item}) => (
             <TouchableOpacity
               style={styles.card}
-              key={item._id}
+              key={item?._id}
               onPress={() =>
                 navigation.navigate('Resource Detail', {id: item._id})
               }>

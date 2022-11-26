@@ -33,7 +33,7 @@ const Bookmark = () => {
     axios
       .get(`http://3.7.173.138:9000/user/my_likes/${data}`)
       .then(response => {
-        console.log('aaaaaa', response.data.data);
+        //console.log('aaaaaa', response.data.data);
         setItems(response.data.data);
       })
       .catch(error => {
