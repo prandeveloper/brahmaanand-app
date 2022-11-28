@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import BannerSlider from '../components/BannerSlider';
-import {freeGames, paidGames, sliderData} from '../model/data';
+import {sliderData} from '../model/data';
 import CustomHeader from '../components/CustomHeader';
 import {Searchbar} from 'react-native-paper';
 import {FlatGrid} from 'react-native-super-grid';

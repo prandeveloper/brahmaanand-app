@@ -148,8 +148,8 @@ const SubmitResource = ({navigation}) => {
   }
   const resourceSubmit = () => {
     console.log(
-      singleFile.assets[0].base64,
-      selected,
+      //singleFile.assets[0].base64,
+      //selected,
       type,
       format,
       category,
@@ -170,14 +170,14 @@ const SubmitResource = ({navigation}) => {
     data.append('sub_category', subCategory);
     data.append('type', type);
     data.append('format', format);
-    data.append('language', selected);
+    //data.append('language', selected);
     data.append('topics', topic);
     data.append('resTitle', title);
     data.append('creatorName', name);
     data.append('relYear', upYear);
     data.append('res_desc', desc);
     data.append('comment', comment);
-    data.append('img', singleFile.assets[0].base64);
+    //data.append('img', singleFile.assets[0].base64);
     fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
       method: 'POST',
       body: data,

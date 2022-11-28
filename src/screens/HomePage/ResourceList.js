@@ -441,18 +441,19 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: 140,
-    height: 100,
+    height: 120,
     marginHorizontal: 5,
     borderRadius: 10,
   },
   sliderTitle: {
     color: '#000',
-    marginHorizontal: 5,
+    marginHorizontal: 8,
+    marginVertical: 10,
     fontWeight: '600',
   },
   sliderImg: {
     backgroundColor: '#F3F3F3',
-    height: 120,
+    height: 140,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,

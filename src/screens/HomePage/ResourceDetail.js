@@ -21,7 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResourceDetail = ({route, navigation}) => {
   const {id} = route.params;
-  console.log(id);
+  //console.log(id);
   const [items, setItems] = useState({});
   const [allReview, setAllReview] = useState({});
   const [comment, setComment] = useState('');
@@ -47,8 +47,8 @@ const ResourceDetail = ({route, navigation}) => {
     axios
       .get(`http://3.7.173.138:9000/user/getone_mylikes/${data}/${id}`)
       .then(response => {
-        console.log('LikeGet', response.data.data);
-        setMyLike(response.data.data);
+        console.log('LikeGet', response.data.data.status);
+        setMyLike(response.data.data.status);
       })
       .catch(error => {
         console.log(error);
@@ -85,7 +85,7 @@ const ResourceDetail = ({route, navigation}) => {
     getData();
     getAllReview();
     getOneLike();
-  }, []);
+  }, [myLike, data]);
 
   // <==========Post a Likes=======>
   const hitLike = () => {
@@ -97,11 +97,11 @@ const ResourceDetail = ({route, navigation}) => {
           status: 'true',
         })
         .then(response => {
-          console.log(response);
-          getResourceDetail();
+          console.log(response.data);
+          getOneLike();
         })
         .catch(error => {
-          console.log(error);
+          console.log(error.response.data);
         });
     } else {
       navigation.navigate('Login');
@@ -118,8 +118,8 @@ const ResourceDetail = ({route, navigation}) => {
           status: 'false',
         })
         .then(response => {
-          console.log(response);
-          getResourceDetail();
+          console.log(response.data);
+          getOneLike();
         })
         .catch(error => {
           console.log(error.response.data);
@@ -319,7 +319,7 @@ const ResourceDetail = ({route, navigation}) => {
         </View>
 
         <View>
-          {myLike.status === 'false' ? (
+          {myLike === 'false' ? (
             <TouchableOpacity style={styles.likeBtnColor} onPress={hitLike}>
               <Text style={styles.likeBtnText}>Add BookMark</Text>
             </TouchableOpacity>
