@@ -143,13 +143,13 @@ const SubmitResource = ({navigation}) => {
     getLanguage();
   }, [userID, category]);
 
-  function submit() {
-    resourceSubmit();
-  }
-  const resourceSubmit = () => {
+  // function submit() {
+  //   resourceSubmit();
+  // }
+  const submit = () => {
     console.log(
-      //singleFile.assets[0].base64,
-      //selected,
+      JSON.stringify(singleFile.assets[0].base64),
+      selected,
       type,
       format,
       category,
@@ -163,32 +163,25 @@ const SubmitResource = ({navigation}) => {
       desc,
       comment,
     );
-    const data = new FormData();
-    data.append('userid', userID);
-    data.append('link', url);
-    data.append('category', category);
-    data.append('sub_category', subCategory);
-    data.append('type', type);
-    data.append('format', format);
-    //data.append('language', selected);
-    data.append('topics', topic);
-    data.append('resTitle', title);
-    data.append('creatorName', name);
-    data.append('relYear', upYear);
-    data.append('res_desc', desc);
-    data.append('comment', comment);
-    //data.append('img', singleFile.assets[0].base64);
-    fetch(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    axios
+      .post(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
+        img: singleFile.assets[0].base64,
+        link: url,
+        category: category,
+        sub_category: subCategory,
+        type: type,
+        format: format,
+        topics: topic,
+        language: selected,
+        resTitle: title,
+        creatorName: name,
+        relYear: upYear,
+        res_desc: desc,
+        comment: comment,
+        userid: userID,
+      })
       .then(response => {
-        response.json().then(res => {
-          console.log(res.data);
-        });
+        console.log(response.data);
       })
       .catch(error => {
         console.log(error);

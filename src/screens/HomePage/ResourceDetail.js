@@ -28,6 +28,7 @@ const ResourceDetail = ({route, navigation}) => {
   const [rating, setRating] = useState();
   const [data, setData] = useState();
   const [myLike, setMyLike] = useState('');
+  const [average, setAverage] = useState('');
 
   const getData = async () => {
     try {
@@ -47,7 +48,7 @@ const ResourceDetail = ({route, navigation}) => {
     axios
       .get(`http://3.7.173.138:9000/user/getone_mylikes/${data}/${id}`)
       .then(response => {
-        console.log('LikeGet', response.data.data.status);
+        console.log('LikeGet', response.data.data);
         setMyLike(response.data.data.status);
       })
       .catch(error => {
@@ -80,11 +81,25 @@ const ResourceDetail = ({route, navigation}) => {
       });
   };
 
+  // <========== Get Average Rating =======>
+  const getAverageRating = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/average_rating/${id}`)
+      .then(response => {
+        console.log(response.data.data);
+        setAverage(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getResourceDetail();
     getData();
     getAllReview();
     getOneLike();
+    getAverageRating();
   }, [myLike, data]);
 
   // <==========Post a Likes=======>
@@ -279,6 +294,7 @@ const ResourceDetail = ({route, navigation}) => {
               <Text style={styles.headText}>Rating:</Text>
               <Text style={[styles.subText, {color: '#FFA841'}]}>
                 <Ionicons name="md-star" color={'#FFA841'} size={20} />
+                {average}
               </Text>
             </View>
           </TouchableOpacity>

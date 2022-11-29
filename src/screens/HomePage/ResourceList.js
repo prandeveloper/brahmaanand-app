@@ -20,6 +20,7 @@ import {CheckBox} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import ShowMore from 'react-native-show-more-button';
 import {RadioButton} from 'react-native-paper';
+import demo from '../../assets/images/Altos-Odyssey.jpeg';
 
 const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
@@ -273,7 +274,7 @@ const ResourceList = ({route, navigation}) => {
           </View>
         </Modal>
 
-        {/* <=======Latest Blogs =========> */}
+        {/* <======= Promotion =========> */}
         <View style={{paddingVertical: 10, marginHorizontal: 10}}>
           <View style={styles.topHeding}>
             <Text style={styles.title}>Promotions</Text>
@@ -300,21 +301,11 @@ const ResourceList = ({route, navigation}) => {
           </ScrollView>
         </View>
 
-        {/* <=======Latest Blogs =========> */}
-
+        {/* <=======Resource List =========> */}
         <View style={styles.topHeding}>
           <Text style={styles.title}>Searching Product</Text>
         </View>
 
-        {/* <=======Resource List =========> */}
-
-        {/* <ShowMore
-          height={100}
-          buttonColor={'#000000'}
-          showMoreText="Show More"
-          showLessText="Show Less"
-          
-          > */}
         <FlatGrid
           itemDimension={150}
           data={items}
@@ -329,7 +320,17 @@ const ResourceList = ({route, navigation}) => {
               onPress={() =>
                 navigation.navigate('Resource Detail', {id: item._id})
               }>
-              <Image style={styles.userImage} source={{uri: `${item?.img}`}} />
+              {item.img !== '' &&
+              item.img !== null &&
+              item.img !== undefined ? (
+                <Image
+                  style={styles.userImage}
+                  source={{uri: `${item?.img}`}}
+                />
+              ) : (
+                <Image style={styles.userImage} source={demo} />
+              )}
+
               <View style={styles.cardFooter}>
                 <Text style={styles.name}>{item.resTitle}</Text>
               </View>
@@ -339,7 +340,6 @@ const ResourceList = ({route, navigation}) => {
             </TouchableOpacity>
           )}
         />
-        {/* </ShowMore> */}
 
         {/* <=======Latest Blogs =========> */}
         <View style={{paddingVertical: 10, marginHorizontal: 10}}>
