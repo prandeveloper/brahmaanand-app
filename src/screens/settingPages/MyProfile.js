@@ -84,18 +84,16 @@ const MyProfile = ({navigation}) => {
 
   const getUser = async () => {
     axios
-      .get(`http://65.0.183.149:8000/user/viewoneuser`, {
-        headers: {'auth-token': await AsyncStorage.getItem('auth-token')},
-      })
+      .get(`http://65.0.183.149:8000/user/viewoneuser`)
       .then(response => {
         console.log(response.data.data);
-        setFirstName(response.data.data.firstname);
-        setLastName(response.data.data.lastname);
-        setGender(response.data.data.gender);
-        setEmail(response.data.data.email);
-        setDate(response.data.data.dob);
-        setMobile(JSON.stringify(response.data.data.mobile));
-        setUserId(response.data.data._id);
+        // setFirstName(response.data.data.firstname);
+        // setLastName(response.data.data.lastname);
+        // setGender(response.data.data.gender);
+        // setEmail(response.data.data.email);
+        // setDate(response.data.data.dob);
+        // setMobile(JSON.stringify(response.data.data.mobile));
+        // setUserId(response.data.data._id);
       })
       .catch(error => {
         console.log(error);
