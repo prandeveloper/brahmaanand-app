@@ -26,8 +26,6 @@ const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
   //console.log(id);
   const [items, setItems] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const onChangeSearch = query => setSearchQuery(query);
   const [modalVisible, setModalVisible] = useState(false);
   const [seekbarValue, setSeekbarValue] = useState(5);
   const [type, setType] = useState('');
@@ -128,15 +126,66 @@ const ResourceList = ({route, navigation}) => {
 
   return (
     <ScrollView>
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+        {/* <======= Promotion =========> */}
+        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
+          <View style={styles.topHeding}>
+            <Text style={styles.title}>Promotions</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Promotion List')}>
+              <Text style={styles.viewAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+            {promotion?.map(promo => (
+              <View style={styles.sliderImg} key={promo?._id}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Resource Detail', {id: promo._id})
+                  }>
+                  <Image
+                    style={styles.slider}
+                    source={{uri: `${promo?.img}`}}
+                  />
+                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* <=======Latest Blogs =========> */}
+        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
+          <View style={styles.topHeding}>
+            <Text style={styles.title}>Suggestion</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Promotion List')}>
+              <Text style={styles.viewAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+            {promotion?.map(promo => (
+              <View style={styles.sliderImg} key={promo?._id}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Resource Detail', {id: promo._id})
+                  }>
+                  <Image
+                    style={styles.slider}
+                    source={{uri: `${promo?.img}`}}
+                  />
+                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 6}}>
-            <Searchbar
-              placeholder="Search"
-              onChangeText={onChangeSearch}
-              value={searchQuery}
-              style={styles.searchInput}
-            />
+            <View style={styles.topHeding}>
+              <Text style={styles.title}>Searching Product</Text>
+            </View>
           </View>
           <TouchableOpacity
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
@@ -274,37 +323,7 @@ const ResourceList = ({route, navigation}) => {
           </View>
         </Modal>
 
-        {/* <======= Promotion =========> */}
-        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
-          <View style={styles.topHeding}>
-            <Text style={styles.title}>Promotions</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Promotion List')}>
-              <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-            {promotion?.map(promo => (
-              <View style={styles.sliderImg} key={promo?._id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('Resource Detail', {id: promo._id})
-                  }>
-                  <Image
-                    style={styles.slider}
-                    source={{uri: `${promo?.img}`}}
-                  />
-                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-
         {/* <=======Resource List =========> */}
-        <View style={styles.topHeding}>
-          <Text style={styles.title}>Searching Product</Text>
-        </View>
 
         <FlatGrid
           itemDimension={150}
@@ -340,33 +359,6 @@ const ResourceList = ({route, navigation}) => {
             </TouchableOpacity>
           )}
         />
-
-        {/* <=======Latest Blogs =========> */}
-        <View style={{paddingVertical: 10, marginHorizontal: 10}}>
-          <View style={styles.topHeding}>
-            <Text style={styles.title}>Suggestion</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Promotion List')}>
-              <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-            {promotion?.map(promo => (
-              <View style={styles.sliderImg} key={promo?._id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('Resource Detail', {id: promo._id})
-                  }>
-                  <Image
-                    style={styles.slider}
-                    source={{uri: `${promo?.img}`}}
-                  />
-                  <Text style={styles.sliderTitle}>{promo?.resTitle}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
       </SafeAreaView>
     </ScrollView>
   );
@@ -387,7 +379,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     backgroundColor: 'white',
     marginHorizontal: 5,
-    height: 200,
+    height: 220,
     borderRadius: 10,
   },
   cardFooter: {
@@ -426,13 +418,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#000',
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 17,
+    fontWeight: '600',
   },
   topHeding: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    margin: 10,
   },
   viewAll: {
     color: '#6F6F6F',

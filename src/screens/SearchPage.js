@@ -1,8 +1,14 @@
-import {SafeAreaView, StyleSheet, Text, View, Image} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {Searchbar} from 'react-native-paper';
 import axios from 'axios';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {FlatGrid} from 'react-native-super-grid';
 import demo from '../assets/images/Altos-Odyssey.jpeg';
 
@@ -53,9 +59,6 @@ const SearchPage = ({navigation}) => {
       </View>
 
       {/* <=========== Result ===========> */}
-      {/* <View style={styles.topHeding}>
-        <Text style={styles.title}>Search Result</Text>
-      </View> */}
 
       <FlatGrid
         itemDimension={150}

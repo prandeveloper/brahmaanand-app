@@ -180,82 +180,82 @@ const HomeStack = () => {
   );
 };
 
-const AuthStack = () => {
-  return (
-    <Drawer.Navigator
-      drawerContent={props => <CustomDrawer {...props} />}
-      screenOptions={{
-        headerShown: false,
-        drawerActiveBackgroundColor: '#4584FF',
-        drawerActiveTintColor: '#fff',
-        drawerInactiveTintColor: '#333',
-        drawerLabelStyle: {
-          marginLeft: -25,
-          fontFamily: 'Roboto-Medium',
-          fontSize: 15,
-        },
-      }}>
-      <Drawer.Screen
-        name="Home"
-        component={HomeStack}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="home-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="My Profile"
-        component={ProfileScreen}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
-        }}
-      />
+// const AuthStack = () => {
+//   return (
+//     <Drawer.Navigator
+//       //drawerContent={props => <CustomDrawer {...props} />}
+//       screenOptions={{
+//         headerShown: false,
+//         drawerActiveBackgroundColor: '#4584FF',
+//         drawerActiveTintColor: '#fff',
+//         drawerInactiveTintColor: '#333',
+//         drawerLabelStyle: {
+//           marginLeft: -25,
+//           fontFamily: 'Roboto-Medium',
+//           fontSize: 15,
+//         },
+//       }}>
+//       <Drawer.Screen
+//         name="Home"
+//         component={HomeStack}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <Ionicons name="home-outline" size={22} color={color} />
+//           ),
+//         }}
+//       />
+//       <Drawer.Screen
+//         name="My Profile"
+//         component={ProfileScreen}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <Ionicons name="person-outline" size={22} color={color} />
+//           ),
+//         }}
+//       />
 
-      <Drawer.Screen
-        name="Membership"
-        component={Membership}
-        options={{
-          drawerIcon: ({color}) => (
-            <MaterialIcons name="card-membership" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Feedback"
-        component={Feedback}
-        options={{
-          drawerIcon: ({color}) => (
-            <MaterialIcons name="feedback" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="About Hospital"
-        component={About}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons
-              name="md-information-circle-outline"
-              size={22}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Contact"
-        component={Contact}
-        options={{
-          drawerIcon: ({color}) => (
-            <AntDesign name="contacts" size={22} color={color} />
-          ),
-        }}
-      />
-    </Drawer.Navigator>
-  );
-};
+//       <Drawer.Screen
+//         name="Membership"
+//         component={Membership}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <MaterialIcons name="card-membership" size={22} color={color} />
+//           ),
+//         }}
+//       />
+//       <Drawer.Screen
+//         name="Feedback"
+//         component={Feedback}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <MaterialIcons name="feedback" size={22} color={color} />
+//           ),
+//         }}
+//       />
+//       <Drawer.Screen
+//         name="About Hospital"
+//         component={About}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <Ionicons
+//               name="md-information-circle-outline"
+//               size={22}
+//               color={color}
+//             />
+//           ),
+//         }}
+//       />
+//       <Drawer.Screen
+//         name="Contact"
+//         component={Contact}
+//         options={{
+//           drawerIcon: ({color}) => (
+//             <AntDesign name="contacts" size={22} color={color} />
+//           ),
+//         }}
+//       />
+//     </Drawer.Navigator>
+//   );
+// };
 
-export default AuthStack;
+export default HomeStack;

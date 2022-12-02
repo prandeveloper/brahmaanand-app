@@ -144,7 +144,7 @@ export default function HomeScreen({navigation}) {
           </ScrollView>
         </View>
         {/* <=======Top Category =========> */}
-        <View style={{paddingVertical: 30}}>
+        <View style={{paddingVertical: 10}}>
           <View style={styles.topHeding}>
             <Text style={styles.title}>Top Category</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Category')}>
@@ -162,7 +162,8 @@ export default function HomeScreen({navigation}) {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('Sub-Category', {id: item._id})
-                }>
+                }
+                key={item?._id}>
                 <ImageBackground
                   source={{uri: `${item?.cat_img}`}}
                   style={styles.itemContainer}>

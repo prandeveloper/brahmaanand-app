@@ -147,45 +147,56 @@ const SubmitResource = ({navigation}) => {
   //   resourceSubmit();
   // }
   const submit = () => {
-    console.log(
-      JSON.stringify(singleFile.assets[0].base64),
-      selected,
-      type,
-      format,
-      category,
-      subCategory,
-      url,
-      userID,
-      topic,
-      title,
-      name,
-      upYear,
-      desc,
-      comment,
-    );
-    axios
-      .post(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
-        img: singleFile.assets[0].base64,
-        link: url,
-        category: category,
-        sub_category: subCategory,
-        type: type,
-        format: format,
-        topics: topic,
-        language: selected,
-        resTitle: title,
-        creatorName: name,
-        relYear: upYear,
-        res_desc: desc,
-        comment: comment,
-        userid: userID,
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (
+      url !== '' &&
+      type !== '' &&
+      format !== '' &&
+      category !== '' &&
+      subCategory !== '' &&
+      topic !== '' &&
+      selected !== ''
+    ) {
+      axios
+        .post(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
+          img: singleFile.assets[0].base64,
+          link: url,
+          category: category,
+          sub_category: subCategory,
+          type: type,
+          format: format,
+          topics: topic,
+          language: selected,
+          resTitle: title,
+          creatorName: name,
+          relYear: upYear,
+          res_desc: desc,
+          comment: comment,
+          userid: userID,
+        })
+        .then(response => {
+          console.log(response.data);
+          if (response.data.message === 'success') {
+            Alert.alert('Resource Submitted Successfully');
+            setUrl('');
+            setType('');
+            setFormat('');
+            setCategory('');
+            setSubCategory('');
+            setTopic('');
+            setSelected('');
+            setTitle('');
+            setName('');
+            setUpYear('');
+            setDesc('');
+            setComment('');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      Alert.alert('Field Should not be Empty');
+    }
   };
 
   return (
