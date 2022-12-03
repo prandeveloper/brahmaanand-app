@@ -154,7 +154,7 @@ const SubmitResource = ({navigation}) => {
       category !== '' &&
       subCategory !== '' &&
       topic !== '' &&
-      selected !== ''
+      selected != ''
     ) {
       axios
         .post(`http://3.7.173.138:9000/user/App_Sub_resrc`, {
@@ -210,12 +210,18 @@ const SubmitResource = ({navigation}) => {
               onPress={chooseFrontFile}>
               <View style={styles.uploadView}>
                 <Ionicons name="md-camera" color="#FFF" size={25} />
-                {/* <Text style={styles.ButtonText}>Upload Image</Text> */}
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Link</Text>
+            {url !== '' ? (
+              <Text style={styles.labelText}>Link</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Link<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
+
             <TextInput
               style={styles.input}
               onChangeText={setUrl}
@@ -224,8 +230,16 @@ const SubmitResource = ({navigation}) => {
               placeholderTextColor="#000"
             />
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Type</Text>
+            {type !== '' ? (
+              <Text style={styles.labelText}>Type</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Type<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
+
             <Picker
               style={styles.pickerInput}
               dropdownIconColor="#000"
@@ -236,8 +250,16 @@ const SubmitResource = ({navigation}) => {
               <Picker.Item label="Paid" value="paid" />
             </Picker>
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Format</Text>
+            {format !== '' ? (
+              <Text style={styles.labelText}>Format</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Format<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
+
             <Picker
               style={styles.pickerInput}
               dropdownIconColor="#000"
@@ -249,8 +271,15 @@ const SubmitResource = ({navigation}) => {
               <Picker.Item label="Video & Text" value="video & text" />
             </Picker>
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Category</Text>
+            {category !== '' ? (
+              <Text style={styles.labelText}>Category</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Category<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
             <Picker
               style={styles.pickerInput}
               dropdownIconColor="#000"
@@ -266,8 +295,16 @@ const SubmitResource = ({navigation}) => {
               ))}
             </Picker>
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Sub-Category</Text>
+            {subCategory !== '' ? (
+              <Text style={styles.labelText}>Sub Category</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Sub Category<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
+
             <Picker
               style={styles.pickerInput}
               dropdownIconColor="#000"
@@ -285,8 +322,15 @@ const SubmitResource = ({navigation}) => {
               ))}
             </Picker>
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Topic</Text>
+            {topic !== '' ? (
+              <Text style={styles.labelText}>Topic</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Topic<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
             <TextInput
               style={styles.input}
               onChangeText={setTopic}
@@ -295,8 +339,15 @@ const SubmitResource = ({navigation}) => {
               placeholderTextColor="#000"
             />
           </View>
+
           <View style={styles.innerView}>
-            <Text style={styles.labelText}>Language</Text>
+            {selected != '' ? (
+              <Text style={styles.labelText}>Language</Text>
+            ) : (
+              <Text style={styles.labelText}>
+                Language<Text style={{color: 'red'}}>*</Text>
+              </Text>
+            )}
             <MultiSelect
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
@@ -433,6 +484,7 @@ const styles = StyleSheet.create({
   pickerInput: {
     color: '#000',
     borderWidth: 1,
+
     backgroundColor: '#FFF',
   },
   DropInput: {
@@ -447,7 +499,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   uploadView: {
-    backgroundColor: '#000',
+    backgroundColor: '#FC9358',
     padding: 30,
     borderRadius: 50,
   },

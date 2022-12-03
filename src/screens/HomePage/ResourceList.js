@@ -44,7 +44,7 @@ const ResourceList = ({route, navigation}) => {
     axios
       .get(`http://3.7.173.138:9000/user/filter_type/${type}`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setItems(response.data.data);
       })
       .catch(error => {
@@ -55,6 +55,31 @@ const ResourceList = ({route, navigation}) => {
   const getFormat = () => {
     axios
       .get(`http://3.7.173.138:9000/user/filterbyFormat/${format}`)
+      .then(response => {
+        //console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  // console.log(selectYear);
+  // const getYeardata = () => {
+  //   axios
+  //     .get(`http://3.7.173.138:9000/user/filterbyyear/${selectYear}`)
+  //     .then(response => {
+  //       console.log(response.data.data);
+  //       setItems(response.data.data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // };
+  console.log(selectedLanguage);
+  const getFilterLanguage = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/filterbyLanguage/${selectedLanguage}`)
       .then(response => {
         console.log(response.data.data);
         setItems(response.data.data);
@@ -105,7 +130,7 @@ const ResourceList = ({route, navigation}) => {
 
   useEffect(() => {
     // <=========== Resources ============>
-    if (type === '') {
+    if (type === '' && format === '' && selectedLanguage === '') {
       axios
         .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
         .then(response => {
@@ -122,7 +147,8 @@ const ResourceList = ({route, navigation}) => {
     getLanguage();
     getType();
     getFormat();
-  }, [type, format]);
+    getFilterLanguage();
+  }, [type, format, selectedLanguage]);
 
   return (
     <ScrollView>
@@ -215,6 +241,7 @@ const ResourceList = ({route, navigation}) => {
                     <Ionicons name="md-close" color="#000" size={25} />
                   </TouchableOpacity>
                 </View>
+
                 <View>
                   <Text style={styles.filterHead}>Review ({seekbarValue})</Text>
                   <Slider
@@ -227,6 +254,7 @@ const ResourceList = ({route, navigation}) => {
                     }}
                   />
                 </View>
+
                 <View>
                   <Text style={styles.filterHead}>Type</Text>
                   <View style={styles.shippingItemsView}>
@@ -250,6 +278,7 @@ const ResourceList = ({route, navigation}) => {
                     </View>
                   </View>
                 </View>
+
                 <View>
                   <Text style={styles.filterHead}>Format</Text>
                   <View style={styles.shippingItemsView}>
@@ -276,7 +305,27 @@ const ResourceList = ({route, navigation}) => {
 
                 <View>
                   <Text style={styles.filterHead}>Not Older Than</Text>
-                  <Picker
+                  <View style={styles.shippingItemsView}>
+                    <View style={styles.radioView}>
+                      <RadioButton
+                        value="2022"
+                        color="red"
+                        status={selectYear === '2022' ? 'checked' : 'unchecked'}
+                        onPress={() => setSelectYear('2022')}
+                      />
+                      <Text style={styles.radioLabelText}>2022</Text>
+                    </View>
+                    {/* <View style={styles.radioView}>
+                      <RadioButton
+                        value="2023"
+                        color="red"
+                        status={selectYear === '2023' ? 'checked' : 'unchecked'}
+                        onPress={() => setSelectYear('2023')}
+                      />
+                      <Text style={styles.radioLabelText}>2023</Text>
+                    </View> */}
+                  </View>
+                  {/* <Picker
                     dropdownIconColor={'black'}
                     style={{backgroundColor: '#fff', color: '#000'}}
                     selectedValue={selectYear}
@@ -291,7 +340,7 @@ const ResourceList = ({route, navigation}) => {
                         value={year._id}
                       />
                     ))}
-                  </Picker>
+                  </Picker> */}
                 </View>
 
                 <View>
