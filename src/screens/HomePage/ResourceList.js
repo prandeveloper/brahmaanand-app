@@ -27,7 +27,7 @@ const ResourceList = ({route, navigation}) => {
   //console.log(id);
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [seekbarValue, setSeekbarValue] = useState(5);
+  const [seekbarValue, setSeekbarValue] = useState(0);
   const [type, setType] = useState('');
   const [format, setFormat] = useState('');
   const [selectYear, setSelectYear] = useState('');
@@ -42,7 +42,7 @@ const ResourceList = ({route, navigation}) => {
   // <=========== Filter Api ============>
   const getType = () => {
     axios
-      .get(`http://3.7.173.138:9000/user/filter_type/${type}`)
+      .get(`http://3.7.173.138:9000/user/filter_type/${id}/${type}`)
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);
@@ -305,27 +305,7 @@ const ResourceList = ({route, navigation}) => {
 
                 <View>
                   <Text style={styles.filterHead}>Not Older Than</Text>
-                  <View style={styles.shippingItemsView}>
-                    <View style={styles.radioView}>
-                      <RadioButton
-                        value="2022"
-                        color="red"
-                        status={selectYear === '2022' ? 'checked' : 'unchecked'}
-                        onPress={() => setSelectYear('2022')}
-                      />
-                      <Text style={styles.radioLabelText}>2022</Text>
-                    </View>
-                    {/* <View style={styles.radioView}>
-                      <RadioButton
-                        value="2023"
-                        color="red"
-                        status={selectYear === '2023' ? 'checked' : 'unchecked'}
-                        onPress={() => setSelectYear('2023')}
-                      />
-                      <Text style={styles.radioLabelText}>2023</Text>
-                    </View> */}
-                  </View>
-                  {/* <Picker
+                  <Picker
                     dropdownIconColor={'black'}
                     style={{backgroundColor: '#fff', color: '#000'}}
                     selectedValue={selectYear}
@@ -340,7 +320,7 @@ const ResourceList = ({route, navigation}) => {
                         value={year._id}
                       />
                     ))}
-                  </Picker> */}
+                  </Picker>
                 </View>
 
                 <View>

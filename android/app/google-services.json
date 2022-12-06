@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1006483677244",
+    "project_id": "brahmaanand-app-b51d0",
+    "storage_bucket": "brahmaanand-app-b51d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006483677244:android:fdfc743501b3cba5fbe339",
+        "android_client_info": {
+          "package_name": "com.Brahmaanand"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006483677244-qdbj810n05imkqt0buld6bs1ab55cn80.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Brahmaanand",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1006483677244-rtj1n11c7ngs3m7594fc27d7vq49miv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDmrDo5BhJ8msZT5vkHngd_L7cxGUOoRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006483677244-rtj1n11c7ngs3m7594fc27d7vq49miv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
