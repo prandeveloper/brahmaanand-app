@@ -26,8 +26,8 @@ export default function HomeScreen({navigation}) {
   const [items, setItems] = useState([]);
   const [blog, setBlog] = useState([]);
   const [content, setContent] = useState([]);
-
   const [playing, setPlaying] = useState(false);
+  const [hashTag, setHashTag] = useState([]);
 
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
@@ -80,10 +80,23 @@ export default function HomeScreen({navigation}) {
       });
   };
 
+  const getHashtag = () => {
+    axios
+      .get(`http://3.7.173.138:9000/admin/getTrending`)
+      .then(response => {
+        console.log(response.data.data);
+        setHashTag(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getCategory();
     getBlogs();
     getFeaturedContent();
+    getHashtag();
   }, []);
 
   return (
@@ -116,31 +129,16 @@ export default function HomeScreen({navigation}) {
             </TouchableOpacity> */}
           </View>
           <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
-            <View style={styles.sliderHash}>
-              <TouchableOpacity>
-                <Text style={styles.hashText}>#education</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderHash}>
-              <TouchableOpacity>
-                <Text style={styles.hashText}>#education</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderHash}>
-              <TouchableOpacity>
-                <Text style={styles.hashText}>#education</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderHash}>
-              <TouchableOpacity>
-                <Text style={styles.hashText}>#education</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.sliderHash}>
-              <TouchableOpacity>
-                <Text style={styles.hashText}>#education</Text>
-              </TouchableOpacity>
-            </View>
+            {hashTag?.map(hash => (
+              <View style={styles.sliderHash} key={hash?._id}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Resource List', {name: hash?.topics})
+                  }>
+                  <Text style={styles.hashText}>#{hash?.topics}</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
           </ScrollView>
         </View>
         {/* <=======Top Category =========> */}

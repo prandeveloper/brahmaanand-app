@@ -24,6 +24,8 @@ import demo from '../../assets/images/Altos-Odyssey.jpeg';
 
 const ResourceList = ({route, navigation}) => {
   const {id} = route.params;
+  const {name} = route.params;
+  console.log(name);
   //console.log(id);
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,6 +37,7 @@ const ResourceList = ({route, navigation}) => {
   const [promotion, setPromotion] = useState([]);
   const [yearList, setYearList] = useState([]);
   const [langList, setLangList] = useState([]);
+  const [hashtag, setHashtag] = useState([]);
 
   //console.log(type);
   // console.log(format);
@@ -54,7 +57,7 @@ const ResourceList = ({route, navigation}) => {
 
   const getFormat = () => {
     axios
-      .get(`http://3.7.173.138:9000/user/filterbyFormat/${format}`)
+      .get(`http://3.7.173.138:9000/user/filterbyFormat/${id}/${format}`)
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);
@@ -64,22 +67,24 @@ const ResourceList = ({route, navigation}) => {
       });
   };
 
-  // console.log(selectYear);
-  // const getYeardata = () => {
-  //   axios
-  //     .get(`http://3.7.173.138:9000/user/filterbyyear/${selectYear}`)
-  //     .then(response => {
-  //       console.log(response.data.data);
-  //       setItems(response.data.data);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // };
+  console.log(selectYear);
+  const getYeardata = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/filterbyyear/${id}/${selectYear}`)
+      .then(response => {
+        console.log('year', response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   console.log(selectedLanguage);
   const getFilterLanguage = () => {
     axios
-      .get(`http://3.7.173.138:9000/user/filterbyLanguage/${selectedLanguage}`)
+      .get(
+        `http://3.7.173.138:9000/user/filterbyLanguage/${id}/${selectedLanguage}`,
+      )
       .then(response => {
         console.log(response.data.data);
         setItems(response.data.data);
@@ -128,9 +133,27 @@ const ResourceList = ({route, navigation}) => {
       });
   };
 
+  //<=============== Data with Hahtag ==============>
+  const getHashTag = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/filterbyHashTag/${name}`)
+      .then(response => {
+        console.log('hashtag', response.data.data);
+        setHashtag(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     // <=========== Resources ============>
-    if (type === '' && format === '' && selectedLanguage === '') {
+    if (
+      type === '' &&
+      format === '' &&
+      selectedLanguage === '' &&
+      selectYear === ''
+    ) {
       axios
         .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
         .then(response => {
@@ -141,14 +164,15 @@ const ResourceList = ({route, navigation}) => {
           console.log(error);
         });
     }
-
     getPromotion();
     getYear();
     getLanguage();
     getType();
     getFormat();
+    getYeardata();
     getFilterLanguage();
-  }, [type, format, selectedLanguage]);
+    getHashTag();
+  }, [type, format, selectYear, selectedLanguage]);
 
   return (
     <ScrollView>
@@ -353,41 +377,81 @@ const ResourceList = ({route, navigation}) => {
         </Modal>
 
         {/* <=======Resource List =========> */}
+        {hashtag != '' && hashtag != undefined ? (
+          <FlatGrid
+            itemDimension={150}
+            data={hashtag}
+            style={styles.gridView}
+            //staticDimension={350}
+            //fixed
+            spacing={10}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.card}
+                key={item?._id}
+                onPress={() =>
+                  navigation.navigate('Resource Detail', {id: item._id})
+                }>
+                {item.img !== '' &&
+                item.img !== null &&
+                item.img !== undefined ? (
+                  <Image
+                    style={styles.userImage}
+                    source={{uri: `${item?.img}`}}
+                  />
+                ) : (
+                  <Image style={styles.userImage} source={demo} />
+                )}
 
-        <FlatGrid
-          itemDimension={150}
-          data={items}
-          style={styles.gridView}
-          //staticDimension={350}
-          //fixed
-          spacing={10}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={styles.card}
-              key={item?._id}
-              onPress={() =>
-                navigation.navigate('Resource Detail', {id: item._id})
-              }>
-              {item.img !== '' &&
-              item.img !== null &&
-              item.img !== undefined ? (
-                <Image
-                  style={styles.userImage}
-                  source={{uri: `${item?.img}`}}
-                />
-              ) : (
-                <Image style={styles.userImage} source={demo} />
-              )}
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name}>{item.resTitle}</Text>
+                </View>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name1}>
+                    Created By: {item.creatorName}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <FlatGrid
+            itemDimension={150}
+            data={items}
+            style={styles.gridView}
+            //staticDimension={350}
+            //fixed
+            spacing={10}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.card}
+                key={item?._id}
+                onPress={() =>
+                  navigation.navigate('Resource Detail', {id: item._id})
+                }>
+                {item.img !== '' &&
+                item.img !== null &&
+                item.img !== undefined ? (
+                  <Image
+                    style={styles.userImage}
+                    source={{uri: `${item?.img}`}}
+                  />
+                ) : (
+                  <Image style={styles.userImage} source={demo} />
+                )}
 
-              <View style={styles.cardFooter}>
-                <Text style={styles.name}>{item.resTitle}</Text>
-              </View>
-              <View style={styles.cardFooter}>
-                <Text style={styles.name1}>Created By: {item.creatorName}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name}>{item.resTitle}</Text>
+                </View>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.name1}>
+                    Created By: {item.creatorName}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </SafeAreaView>
     </ScrollView>
   );
