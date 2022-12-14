@@ -16,17 +16,22 @@ import {TextInput} from 'react-native-paper';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 const MyProfile = ({navigation}) => {
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [fNameValidError, setFNameValidError] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [emailValidError, setEmailValidError] = useState('');
-  const [mobile, setMobile] = useState();
-  const [gender, setGender] = useState('male');
-  const [userId, setUserId] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [myId, setMyId] = useState('');
   const [singleFile, setSingleFile] = useState('');
+  const [myData, setMyData] = useState({});
+
+  const getUserId = async () => {
+    const userID = await AsyncStorage.getItem('userId');
+    setMyId(userID);
+    console.log(userID);
+  };
 
   // ============image picker ===============
   const chooseFrontFile = type => {
@@ -84,16 +89,14 @@ const MyProfile = ({navigation}) => {
 
   const getUser = async () => {
     axios
-      .get(`http://65.0.183.149:8000/user/viewoneuser`)
+      .get(`http://3.7.173.138:9000/user/getoneUser/${myId}`)
       .then(response => {
         console.log(response.data.data);
-        // setFirstName(response.data.data.firstname);
-        // setLastName(response.data.data.lastname);
-        // setGender(response.data.data.gender);
-        // setEmail(response.data.data.email);
-        // setDate(response.data.data.dob);
-        // setMobile(JSON.stringify(response.data.data.mobile));
-        // setUserId(response.data.data._id);
+        setMyData(response.data.data);
+        setFirstName(response.data.data.username);
+        setEmail(response.data.data.email);
+        setDisplayName(response.data.data.display_name);
+        setDesc(response.data.data.abt_us);
       })
       .catch(error => {
         console.log(error);
@@ -101,23 +104,19 @@ const MyProfile = ({navigation}) => {
   };
   useEffect(() => {
     getUser();
-  }, []);
+    getUserId();
+  }, [myId]);
 
   const editProfile = async () => {
-    console.log(firstName, lastName, email, mobile, gender, date);
+    console.log(firstName, email);
     axios
-      .post(
-        `http://65.0.183.149:8000/user/myprofile`,
-        {
-          firstname: firstName,
-          lastname: lastName,
-          gender: gender,
-          dob: date,
-          email: email,
-          mobile: mobile,
-        },
-        {headers: {'auth-token': await AsyncStorage.getItem('auth-token')}},
-      )
+      .post(`http://3.7.173.138:9000/user/updateProfile/${myId}`, {
+        firstname: firstName,
+        display_name: displayName,
+        email: email,
+        abt_us: desc,
+        profileImg: singleFile.assets[0].base64,
+      })
       .then(response => {
         console.log(response.data);
         navigation.replace('My Account');
@@ -135,9 +134,17 @@ const MyProfile = ({navigation}) => {
         <View style={styles.main}>
           <View style={styles.mainView1}>
             <TouchableOpacity onPress={chooseFrontFile}>
-              <View style={styles.cameraView}>
-                <Ionicons name="md-camera" color="#FC9358" size={30} />
-              </View>
+              {myData.profileImg == '' &&
+              myData.profileImg == undefined &&
+              myData.profileImg == null ? (
+                <View style={styles.cameraView}>
+                  <Ionicons name="md-camera" color="#FC9358" size={30} />
+                </View>
+              ) : (
+                <View style={styles.cameraView}>
+                  <Image source={{uri: `${myData?.profileImg}`}} />
+                </View>
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.mainView}>
@@ -161,8 +168,8 @@ const MyProfile = ({navigation}) => {
               outlineColor="#FC9358"
               activeOutlineColor="#FC9358"
               mode="outlined"
-              value={firstName}
-              onChangeText={setFirstName}
+              value={displayName}
+              onChangeText={setDisplayName}
               keyboardType="default"
               style={[styles.tfield, {width: 250}]}
             />
@@ -191,8 +198,8 @@ const MyProfile = ({navigation}) => {
               outlineColor="#FC9358"
               activeOutlineColor="#FC9358"
               mode="outlined"
-              onChangeText={setMobile}
-              value={mobile}
+              onChangeText={setDesc}
+              value={desc}
               keyboardType="default"
             />
           </View>

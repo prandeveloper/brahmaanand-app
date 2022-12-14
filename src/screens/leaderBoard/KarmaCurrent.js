@@ -16,6 +16,7 @@ import mercury from '../../assets/images/planet/mercury.png';
 
 const KarmaCurrent = () => {
   const [items, setItems] = useState([]);
+  const [allTime, setAllTime] = useState([]);
   const [planet, setPlanet] = useState([
     {
       imageUrl: require('../../assets/images/planet/sun.png'),
@@ -41,8 +42,19 @@ const KarmaCurrent = () => {
     axios
       .get(`http://3.7.173.138:9000/user/karma_crrnt_month`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  const getAllTime = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/all_time_karma`)
+      .then(response => {
+        console.log(response.data.data);
+        setAllTime(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -50,6 +62,7 @@ const KarmaCurrent = () => {
   };
   useEffect(() => {
     getCurrentKarma();
+    getAllTime();
   }, []);
   return (
     <View style={styles.container}>
@@ -92,7 +105,7 @@ const KarmaCurrent = () => {
 
         <FlatGrid
           itemDimension={130}
-          data={items}
+          data={allTime}
           style={styles.gridView}
           // staticDimension={450}
           // fixed
@@ -104,17 +117,18 @@ const KarmaCurrent = () => {
                   <Image source={item.imageUrl} style={styles.planetImage} />
                 </View>
                 <View style={styles.iconView2}>
-                  <Text style={styles.iconNum}>1120</Text>
+                  <Text style={styles.iconNum}>{item?.meteors}</Text>
                 </View>
               </View>
               <View style={styles.bgImageView}>
                 <ImageBackground
-                  source={item.bgUrl}
-                  style={styles.bgImage}></ImageBackground>
+                  source={{uri: `${item.userid?.profileImg}`}}
+                  style={styles.bgImage}
+                  imageStyle={{borderRadius: 50}}></ImageBackground>
               </View>
               <View>
-                <Text style={styles.upperText}>{item.text1}</Text>
-                <Text style={styles.lowerText}>{item.text2}</Text>
+                <Text style={styles.upperText}>{item.userid?.username}</Text>
+                <Text style={styles.lowerText}>{item.userid?.meteors}</Text>
               </View>
             </View>
           )}
