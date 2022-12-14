@@ -6,87 +6,120 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FlatGrid} from 'react-native-super-grid';
+import axios from 'axios';
+import sun from '../../assets/images/planet/sun.png';
+import mercury from '../../assets/images/planet/mercury.png';
 
 const KarmaCurrent = () => {
-  const [items, setItems] = React.useState([
+  const [items, setItems] = useState([]);
+  const [planet, setPlanet] = useState([
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/sun.png'),
-      bgUrl: require('../../assets/images/planet/Avatar1.png'),
     },
 
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/mercury.png'),
-      bgUrl: require('../../assets/images/planet/Avatar2.png'),
     },
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/venus.png'),
-      bgUrl: require('../../assets/images/planet/Avatar3.png'),
     },
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/mars.png'),
-      bgUrl: require('../../assets/images/planet/Avatar1.png'),
     },
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/jupiter.png'),
-      bgUrl: require('../../assets/images/planet/Avatar2.png'),
     },
     {
-      text1: 'CromSoldier',
-      text2: '3752',
       imageUrl: require('../../assets/images/planet/saturn.png'),
-      bgUrl: require('../../assets/images/planet/Avatar3.png'),
     },
   ]);
+  const getCurrentKarma = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/karma_crrnt_month`)
+      .then(response => {
+        console.log(response.data.data);
+        setItems(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getCurrentKarma();
+  }, []);
   return (
     <View style={styles.container}>
-      <Text
-        style={{color: '#FC9358', margin: 5, fontSize: 16, fontWeight: '700'}}>
-        Karma - Current Month
-      </Text>
+      <View>
+        <Text style={styles.karmaText}>Karma - Current Month</Text>
 
-      <FlatGrid
-        itemDimension={130}
-        data={items}
-        style={styles.gridView}
-        // staticDimension={450}
-        // fixed
-        spacing={10}
-        renderItem={({item}) => (
-          <View style={styles.innerView}>
-            <View style={styles.iconView}>
-              <View style={styles.iconView1}>
-                <Image source={item.imageUrl} style={styles.planetImage} />
+        <FlatGrid
+          itemDimension={130}
+          data={items}
+          style={styles.gridView}
+          // staticDimension={450}
+          // fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <View style={styles.innerView}>
+              <View style={styles.iconView}>
+                <View style={styles.iconView1}>
+                  <Image source={sun} style={styles.planetImage} />
+                </View>
+                <View style={styles.iconView2}>
+                  <Text style={styles.iconNum}>{item?.meteors}</Text>
+                </View>
               </View>
-              <View style={styles.iconView2}>
-                <Text style={styles.iconNum}>1120</Text>
+              <View style={styles.bgImageView}>
+                <ImageBackground
+                  source={{uri: `${item.userid?.profileImg}`}}
+                  style={styles.bgImage}
+                  imageStyle={{borderRadius: 50}}></ImageBackground>
+              </View>
+              <View>
+                <Text style={styles.upperText}>{item.userid?.username}</Text>
+                <Text style={styles.lowerText}>{item.userid?.meteors}</Text>
               </View>
             </View>
-            <View style={styles.bgImageView}>
-              <ImageBackground
-                source={item.bgUrl}
-                style={styles.bgImage}></ImageBackground>
+          )}
+        />
+      </View>
+      <View>
+        <Text style={styles.karmaText}>Karma - All Time</Text>
+
+        <FlatGrid
+          itemDimension={130}
+          data={items}
+          style={styles.gridView}
+          // staticDimension={450}
+          // fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <View style={styles.innerView}>
+              <View style={styles.iconView}>
+                <View style={styles.iconView1}>
+                  <Image source={item.imageUrl} style={styles.planetImage} />
+                </View>
+                <View style={styles.iconView2}>
+                  <Text style={styles.iconNum}>1120</Text>
+                </View>
+              </View>
+              <View style={styles.bgImageView}>
+                <ImageBackground
+                  source={item.bgUrl}
+                  style={styles.bgImage}></ImageBackground>
+              </View>
+              <View>
+                <Text style={styles.upperText}>{item.text1}</Text>
+                <Text style={styles.lowerText}>{item.text2}</Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.upperText}>{item.text1}</Text>
-              <Text style={styles.lowerText}>{item.text2}</Text>
-            </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -95,6 +128,12 @@ export default KarmaCurrent;
 
 const styles = StyleSheet.create({
   container: {},
+  karmaText: {
+    color: '#FC9358',
+    margin: 5,
+    fontSize: 16,
+    fontWeight: '700',
+  },
 
   innerView: {
     flex: 1,
@@ -135,17 +174,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 2,
+    borderRadius: 50,
   },
   bgImage: {
     height: 80,
     width: 80,
-    display: 'flex',
   },
   upperText: {
     textAlign: 'center',
     color: '#000',
     margin: 2,
     fontWeight: '600',
+    textTransform: 'capitalize',
   },
   lowerText: {
     textAlign: 'center',
