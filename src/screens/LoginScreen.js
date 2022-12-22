@@ -39,7 +39,7 @@ const LoginScreen = ({navigation}) => {
         console.log('success');
         console.log(user);
         setStoreddata(user);
-        navigation.replace('Home');
+        //navigation.replace('Home');
       }
     } catch (e) {
       console.log('no Value in login');

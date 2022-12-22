@@ -60,7 +60,7 @@ const ResourceDetail = ({route, navigation}) => {
     axios
       .get(`http://43.205.82.226:9000/admin/getone_reslist/${id}`)
       .then(response => {
-        //console.log(response.data.data);
+        console.log(response.data.data);
         setItems(response.data.data);
       })
       .catch(error => {
@@ -203,6 +203,17 @@ const ResourceDetail = ({route, navigation}) => {
                 onPress={() => Linking.openURL(items.link)}>
                 {items.link}
               </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.contentColors}>
+          <View style={styles.btnColor}>
+            <View style={styles.textView}>
+              <Text style={styles.headText}>Topic :</Text>
+            </View>
+            <TouchableOpacity style={styles.textView}>
+              <Text style={styles.headText}>{items.link}</Text>
             </TouchableOpacity>
           </View>
         </View>

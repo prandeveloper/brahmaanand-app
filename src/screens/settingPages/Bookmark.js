@@ -44,11 +44,40 @@ const Bookmark = () => {
   useEffect(() => {
     getData();
     getResourceList();
+    getVideoList();
   }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={{color: '#000', backgroundColor: 'red'}}>Hello</Text>
+        <FlatGrid
+          itemDimension={150}
+          data={video}
+          style={styles.gridView}
+          //staticDimension={350}
+          //fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.card}
+              key={item._id}
+              onPress={() =>
+                navigation.navigate('Resource Detail', {id: item._id})
+              }>
+              <Image
+                style={styles.userImage}
+                source={{uri: `${item?.submitresrcId?.img}`}}
+              />
+              <View style={styles.cardFooter}>
+                <Text style={styles.name}>{item.submitresrcId?.resTitle}</Text>
+              </View>
+              <View style={styles.cardFooter}>
+                <Text style={styles.name1}>
+                  Created By: {item.submitresrcId?.creatorName}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       </View>
     </SafeAreaView>
   );

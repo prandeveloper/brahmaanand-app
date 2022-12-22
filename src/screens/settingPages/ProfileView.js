@@ -20,6 +20,19 @@ export default function ProfileView({navigation}) {
   const [showContent, setShowContent] = useState('VideoPosted');
   const [items, setItems] = useState([]);
   const [point, setPoint] = useState();
+  const [video, setVideo] = useState([]);
+
+  const getVideoList = () => {
+    axios
+      .get(`http://3.7.173.138:9000/user/posted_by_me/${id}`)
+      .then(response => {
+        console.log('aaaaaa', response.data.data);
+        setVideo(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const getResourceList = () => {
     axios
@@ -46,7 +59,36 @@ export default function ProfileView({navigation}) {
   };
 
   function VideoPosted() {
-    return <Text style={{color: '#000'}}> Hello</Text>;
+    return (
+      <View>
+        <FlatGrid
+          itemDimension={150}
+          data={video}
+          style={styles.gridView}
+          //staticDimension={350}
+          //fixed
+          spacing={10}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.card}
+              key={item._id}
+              onPress={() =>
+                navigation.navigate('Resource Detail', {
+                  id: item._id,
+                })
+              }>
+              <Image style={styles.userImage} source={{uri: `${item?.img}`}} />
+              <View style={styles.cardFooter}>
+                <Text style={styles.name}>{item.resTitle}</Text>
+              </View>
+              <View style={styles.cardFooter}>
+                <Text style={styles.name1}>Created By: {item.creatorName}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    );
   }
 
   const BookMark = () => {
@@ -127,6 +169,7 @@ export default function ProfileView({navigation}) {
     getUser();
     getResourceList();
     getPoints();
+    getVideoList();
   }, [id]);
 
   return (
