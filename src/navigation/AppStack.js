@@ -1,7 +1,6 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CustomDrawer from '../components/CustomDrawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -17,7 +16,6 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import OnboardingSlider from '../screens/OnboardingSlider';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import OtpScreen from '../screens/OtpScreen';
 import SubmitResource from '../screens/SubmitResource';
 import Setting from '../screens/Setting';
 import MyProfile from '../screens/settingPages/MyProfile';
@@ -34,6 +32,7 @@ import ReviewList from '../screens/HomePage/ReviewList';
 import PromotionList from '../screens/HomePage/PromotionList';
 import Bookmark from '../screens/settingPages/Bookmark';
 import SearchPage from '../screens/SearchPage';
+import BlogHome from '../screens/blogPage/BlogHome';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -61,11 +60,7 @@ const HomeStack = () => {
         component={RegisterScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="OtpScreen"
-        component={OtpScreen}
-        options={{headerShown: false}}
-      />
+
       <Stack.Screen
         name="Home"
         component={TabNavigator}
@@ -110,6 +105,11 @@ const HomeStack = () => {
         name="Blogs"
         component={AllBlog}
         options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="BlogHome"
+        component={BlogHome}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Blog Detail"
@@ -179,83 +179,5 @@ const HomeStack = () => {
     </Stack.Navigator>
   );
 };
-
-// const AuthStack = () => {
-//   return (
-//     <Drawer.Navigator
-//       //drawerContent={props => <CustomDrawer {...props} />}
-//       screenOptions={{
-//         headerShown: false,
-//         drawerActiveBackgroundColor: '#4584FF',
-//         drawerActiveTintColor: '#fff',
-//         drawerInactiveTintColor: '#333',
-//         drawerLabelStyle: {
-//           marginLeft: -25,
-//           fontFamily: 'Roboto-Medium',
-//           fontSize: 15,
-//         },
-//       }}>
-//       <Drawer.Screen
-//         name="Home"
-//         component={HomeStack}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <Ionicons name="home-outline" size={22} color={color} />
-//           ),
-//         }}
-//       />
-//       <Drawer.Screen
-//         name="My Profile"
-//         component={ProfileScreen}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <Ionicons name="person-outline" size={22} color={color} />
-//           ),
-//         }}
-//       />
-
-//       <Drawer.Screen
-//         name="Membership"
-//         component={Membership}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <MaterialIcons name="card-membership" size={22} color={color} />
-//           ),
-//         }}
-//       />
-//       <Drawer.Screen
-//         name="Feedback"
-//         component={Feedback}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <MaterialIcons name="feedback" size={22} color={color} />
-//           ),
-//         }}
-//       />
-//       <Drawer.Screen
-//         name="About Hospital"
-//         component={About}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <Ionicons
-//               name="md-information-circle-outline"
-//               size={22}
-//               color={color}
-//             />
-//           ),
-//         }}
-//       />
-//       <Drawer.Screen
-//         name="Contact"
-//         component={Contact}
-//         options={{
-//           drawerIcon: ({color}) => (
-//             <AntDesign name="contacts" size={22} color={color} />
-//           ),
-//         }}
-//       />
-//     </Drawer.Navigator>
-//   );
-// };
 
 export default HomeStack;

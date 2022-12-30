@@ -6,7 +6,7 @@ import logo from '../assets/images/logonew.png';
 
 function CustomHeader({title, navigation}) {
   return (
-    <LinearGradient colors={['#000', '#000']}>
+    <LinearGradient colors={['#2c2c2c', '#2c2c2c']}>
       <View
         style={{
           flexDirection: 'row',

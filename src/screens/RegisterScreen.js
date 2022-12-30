@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import RegistrationSVG from '../assets/images/misc/registration.svg';
 import CustomButton from '../components/CustomButton';
@@ -19,6 +21,19 @@ const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
   const [storeddata, setStoreddata] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
+  const [emailValidError, setEmailValidError] = useState('');
+
+  const handleValidEmail = val => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    if (val.length === 0) {
+      setEmailValidError('Email Address must be Enter');
+    } else if (reg.test(val) === false) {
+      setEmailValidError('Enter Valid Email Address');
+    } else if (reg.test(val) === true) {
+      setEmailValidError('');
+    }
+  };
 
   function showToast() {
     ToastAndroid.show('Wrong Email or Password', ToastAndroid.SHORT);
@@ -40,7 +55,7 @@ const RegisterScreen = ({navigation}) => {
         console.log('success');
         console.log(user);
         setStoreddata(user);
-        //navigation.replace('Home');
+        navigation.replace('Home');
       }
     } catch (e) {
       console.log('no Value in Signup');
@@ -52,38 +67,42 @@ const RegisterScreen = ({navigation}) => {
 
   const signUp = () => {
     console.log(userName, email, password);
-    axios
-      .post(`http://43.205.82.226:9000/user/signup`, {
-        username: userName,
-        email: email,
-        password: password,
-      })
-      .then(response => {
-        console.log('@@@@', response.data.data);
-        console.log(response.data.message);
-        // if (
-        //   response.data.message === 'success' ||
-        //   response.data.message == 'success'
-        // ) {
-        //   ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
-        // }
-        console.log(response.data.data._id);
-        if (response.data.data._id != null) {
-          _storeData(response.data.data._id);
-          navigation.replace('Home');
-        } else {
-          console.log('no ID!');
-        }
-      })
-      .catch(error => {
-        console.log('eeee', error.response.data);
-        // if (
-        //   error.response.data.msg == 'User Doesnot Exist' ||
-        //   error.response.data.msg === 'User Doesnot Exist'
-        // ) {
-        //   showToast();
-        // }
-      });
+    if (emailValidError === '' && email !== '' && password !== '') {
+      axios
+        .post(`http://43.205.82.226:9000/user/signup`, {
+          username: userName,
+          email: email,
+          password: password,
+        })
+        .then(response => {
+          console.log('@@@@', response.data.data);
+          console.log(response.data.message);
+          if (
+            response.data.message === 'success' ||
+            response.data.message == 'success'
+          ) {
+            ToastAndroid.show('Register Successfull....', ToastAndroid.SHORT);
+          }
+          console.log(response.data.data._id);
+          if (response.data.data._id != null) {
+            _storeData(response.data.data._id);
+            navigation.replace('Home');
+          } else {
+            console.log('no ID!');
+          }
+        })
+        .catch(error => {
+          console.log('eeee', error.response.data);
+          // if (
+          //   error.response.data.msg == 'User Doesnot Exist' ||
+          //   error.response.data.msg === 'User Doesnot Exist'
+          // ) {
+          //   showToast();
+          // }
+        });
+    } else {
+      Alert.alert('Enter All the Fields');
+    }
   };
 
   return (
@@ -126,8 +145,14 @@ const RegisterScreen = ({navigation}) => {
             mode="outlined"
             outlineColor="orange"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={value => {
+              setEmail(value);
+              handleValidEmail(value);
+            }}
           />
+          {emailValidError !== '' ? (
+            <Text style={{color: 'red'}}>{emailValidError}</Text>
+          ) : null}
         </View>
 
         <View style={styles.inputField}>

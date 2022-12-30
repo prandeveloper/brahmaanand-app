@@ -8,18 +8,28 @@ import {
   Alert,
   ScrollView,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
 
 export default function AllBlog({navigation}) {
+  const [refreshing, setRefreshing] = useState(false);
   const [blog, setBlog] = useState([]);
-  const getBlogs = () => {
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  const getBlogs = async () => {
+    setRefreshing(true);
     axios
       .get(`http://43.205.82.226:9000/admin/getBlog`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setBlog(response.data.data);
+        setRefreshing(false);
       })
       .catch(error => {
         console.log(error);
@@ -32,6 +42,9 @@ export default function AllBlog({navigation}) {
   return (
     <View style={styles.container}>
       <FlatGrid
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         itemDimension={130}
         data={blog}
         style={styles.gridView}
@@ -41,7 +54,7 @@ export default function AllBlog({navigation}) {
         renderItem={({item}) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('Blog Detail', {id: item._id})}
+            onPress={() => navigation.navigate('Blog Detail', {id: item?._id})}
             ket={item._id}>
             <View>
               <Image

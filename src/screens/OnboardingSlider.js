@@ -19,29 +19,32 @@ const slides = [
   {
     id: '1',
     image: require('../assets/images/image1.png'),
-    title: 'Best Digital Solution',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: 'AI driven, Community rated Content marketplace',
+    subtitle:
+      'FInd best courses, videos, tutorials, blogs etc. in all categories like Education, Movies, Tech, Fitness, Comedy etc.',
   },
   {
     id: '2',
     image: require('../assets/images/image2.png'),
-    title: 'Achieve Your Goals',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: 'Contribute to community',
+    subtitle:
+      'Submit, rate & review best content across internet and win exciting prizes and money',
   },
   {
     id: '3',
     image: require('../assets/images/image3.png'),
-    title: 'Increase Your Value',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: 'Looking for best, relevant and authentic content?',
+    subtitle:
+      'Content is spread across Youtube, Medium and other sites & its difficult to find content as per the requirement',
   },
 ];
 
 const Slide = ({item}) => {
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{alignItems: 'center', flex: 1, width: width}}>
       <Image
         source={item?.image}
-        style={{height: '75%', width, resizeMode: 'contain'}}
+        style={{height: '60%', width, resizeMode: 'contain'}}
       />
       <View>
         <Text style={styles.title}>{item?.title}</Text>
@@ -162,8 +165,8 @@ const OnboardingSlider = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.primary}}>
-      <StatusBar backgroundColor={COLORS.primary} />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#2c2c2c'}}>
+      <StatusBar backgroundColor={'#2c2c2c'} />
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
@@ -182,17 +185,19 @@ const OnboardingSlider = ({navigation}) => {
 const styles = StyleSheet.create({
   subtitle: {
     color: COLORS.white,
-    fontSize: 13,
+    fontSize: 15,
     marginTop: 10,
-    maxWidth: '70%',
+    maxWidth: '100%',
     textAlign: 'center',
     lineHeight: 23,
+    marginHorizontal: 20,
   },
   title: {
     color: COLORS.white,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,
+    marginHorizontal: 20,
     textAlign: 'center',
   },
   image: {

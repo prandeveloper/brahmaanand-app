@@ -5,7 +5,6 @@ import HomeScreen from '../screens/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import TopSheme from '../screens/TopSheme';
 import SubmitResource from '../screens/SubmitResource';
 import Setting from '../screens/Setting';
 import LeaderBoard from '../screens/leaderBoard/LeaderBoard';

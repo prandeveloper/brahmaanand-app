@@ -14,7 +14,7 @@ const OnboardingScreen = ({navigation}) => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#282534',
+        backgroundColor: '#2c2c2c',
       }}>
       <Image
         style={{width: 300, height: 180}}

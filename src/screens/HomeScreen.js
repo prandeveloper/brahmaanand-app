@@ -1,33 +1,35 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
-  Button,
   View,
   Text,
   SafeAreaView,
   ScrollView,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Image,
+  RefreshControl,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import BannerSlider from '../components/BannerSlider';
 import {sliderData} from '../model/data';
 import CustomHeader from '../components/CustomHeader';
-import {Searchbar} from 'react-native-paper';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import BlogHome from './blogPage/BlogHome';
 
 export default function HomeScreen({navigation}) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const onChangeSearch = query => setSearchQuery(query);
+  const [refreshing, setRefreshing] = useState(false);
   const [items, setItems] = useState([]);
-  const [blog, setBlog] = useState([]);
   const [content, setContent] = useState([]);
   const [playing, setPlaying] = useState(false);
   const [hashTag, setHashTag] = useState([]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
@@ -45,11 +47,13 @@ export default function HomeScreen({navigation}) {
   };
 
   const getCategory = () => {
+    setRefreshing(true);
     axios
       .get(`http://43.205.82.226:9000/admin/getallCategory`)
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);
+        setRefreshing(false);
       })
       .catch(error => {
         console.log(error);
@@ -57,23 +61,13 @@ export default function HomeScreen({navigation}) {
   };
 
   const getFeaturedContent = () => {
+    setRefreshing(true);
     axios
       .get(`http://3.7.173.138:9000/admin/admin_featured_cnt`)
       .then(response => {
-        console.log(response.data.data);
-        setContent(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const getBlogs = () => {
-    axios
-      .get(`http://43.205.82.226:9000/admin/getBlog`)
-      .then(response => {
         //console.log(response.data.data);
-        setBlog(response.data.data);
+        setContent(response.data.data);
+        setRefreshing(false);
       })
       .catch(error => {
         console.log(error);
@@ -81,11 +75,14 @@ export default function HomeScreen({navigation}) {
   };
 
   const getHashtag = () => {
+    setRefreshing(true);
+
     axios
       .get(`http://3.7.173.138:9000/admin/getTrending`)
       .then(response => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         setHashTag(response.data.data);
+        setRefreshing(false);
       })
       .catch(error => {
         console.log(error);
@@ -94,7 +91,6 @@ export default function HomeScreen({navigation}) {
 
   useEffect(() => {
     getCategory();
-    getBlogs();
     getFeaturedContent();
     getHashtag();
   }, []);
@@ -123,12 +119,17 @@ export default function HomeScreen({navigation}) {
         {/* <=======HashTag=========> */}
         <View style={{paddingVertical: 20}}>
           <View style={styles.topHeding}>
-            <Text style={styles.title}>#Hashtag</Text>
+            <Text style={styles.title}>Popular Searches</Text>
             {/* <TouchableOpacity>
               <Text style={styles.viewAll}>See All</Text>
             </TouchableOpacity> */}
           </View>
-          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+          <ScrollView
+            horizontal={true}
+            style={{flexDirection: 'row'}}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
             {hashTag?.map(hash => (
               <View style={styles.sliderHash} key={hash?._id}>
                 <TouchableOpacity
@@ -150,6 +151,9 @@ export default function HomeScreen({navigation}) {
             </TouchableOpacity>
           </View>
           <FlatGrid
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             itemDimension={130}
             data={items.slice(0, 8)}
             style={styles.gridView}
@@ -177,11 +181,13 @@ export default function HomeScreen({navigation}) {
         <View style={{paddingVertical: 20}}>
           <View style={styles.topHeding}>
             <Text style={styles.title}>Featured Content</Text>
-            {/* <TouchableOpacity>
-              <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity> */}
           </View>
-          <ScrollView horizontal={true} style={{flexDirection: 'row'}}>
+          <ScrollView
+            horizontal={true}
+            style={{flexDirection: 'row'}}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
             {content?.map(video => (
               <View style={styles.featureStyle} key={video._id}>
                 <YoutubePlayer
@@ -198,40 +204,8 @@ export default function HomeScreen({navigation}) {
         </View>
 
         {/* <=======Latest Blogs =========> */}
-        <View style={{paddingVertical: 30}}>
-          <View style={styles.topHeding}>
-            <Text style={styles.title}>Latest Blogs</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-              <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView
-            horizontal={true}
-            style={{flexDirection: 'row', marginBottom: 20}}>
-            {blog?.slice(0, 10).map(bList => (
-              <View style={styles.sliderImg} key={bList._id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('Blog Detail', {id: bList._id})
-                  }>
-                  <Image
-                    style={styles.slider}
-                    source={{uri: `${bList.blogImg}`}}
-                  />
-                  <Text style={styles.sliderTitle}>{bList?.blog_title}</Text>
-                  <View style={styles.blogMaster}>
-                    <Image
-                      style={styles.blogMasterImage}
-                      source={{uri: `${bList.posted_by_img}`}}
-                    />
-                    <Text style={styles.blogMasterText}>
-                      {bList?.posted_by}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
+        <View>
+          <BlogHome />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -107,7 +107,7 @@ const MyProfile = ({navigation}) => {
   }, [myId]);
 
   const editProfile = async () => {
-    console.log(firstName, email);
+    console.log(firstName, email, displayName, desc);
     axios
       .post(`http://3.7.173.138:9000/user/updateProfile/${myId}`, {
         firstname: firstName,
@@ -118,7 +118,7 @@ const MyProfile = ({navigation}) => {
       })
       .then(response => {
         console.log(response.data);
-        navigation.replace('My Account');
+        navigation.replace('MyAccount');
       })
       .catch(error => {
         console.log(error);
@@ -140,8 +140,11 @@ const MyProfile = ({navigation}) => {
                   <Ionicons name="md-camera" color="#FC9358" size={30} />
                 </View>
               ) : (
-                <View style={styles.cameraView}>
-                  <Image source={{uri: `${myData?.profileImg}`}} />
+                <View>
+                  <Image
+                    source={{uri: `${myData?.profileImg}`}}
+                    style={{width: 80, height: 80, borderRadius: 50}}
+                  />
                 </View>
               )}
             </TouchableOpacity>

@@ -15,11 +15,12 @@ const BrahmaWork = () => {
             />
             <Card.Content>
               <Title style={{textAlign: 'center'}}>
-                Users submit resources they find relevant in respective category
+                Search for the top content on any subject ... (e.g. Java)
               </Title>
               <Paragraph>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+                Our team of experts at Brahmaand.Space thoroughly evaluates and
+                curates submitted content from across the globe, which are links
+                to YouTube videos, courses, articles, and blogs.
               </Paragraph>
             </Card.Content>
           </Card>
@@ -31,12 +32,13 @@ const BrahmaWork = () => {
             />
             <Card.Content>
               <Title style={{textAlign: 'center'}}>
-                Community and experts will rate the resources and give their
-                reviews.
+                User community and category experts will give their assessments
+                and feedback for the submitted content.
               </Title>
               <Paragraph>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+                Again, our expert team manually evaluates all ratings and
+                reviews to verify their sources and ensure they provide helpful
+                information.
               </Paragraph>
             </Card.Content>
           </Card>
@@ -48,12 +50,13 @@ const BrahmaWork = () => {
             />
             <Card.Content>
               <Title style={{textAlign: 'center'}}>
-                Community and experts will rate the resources and give their
-                reviews.
+                Brahmaand.Space showcases the best content that rises to the top
+                for your learning and enjoyment.
               </Title>
               <Paragraph>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+                Our platform rewards users who submitted content in the first
+                step with prizes based on the ratings and reviews from
+                Brahmaand.Space users community.
               </Paragraph>
             </Card.Content>
           </Card>

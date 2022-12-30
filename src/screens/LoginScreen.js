@@ -39,7 +39,7 @@ const LoginScreen = ({navigation}) => {
         console.log('success');
         console.log(user);
         setStoreddata(user);
-        //navigation.replace('Home');
+        navigation.replace('Home');
       }
     } catch (e) {
       console.log('no Value in login');
@@ -72,12 +72,12 @@ const LoginScreen = ({navigation}) => {
       })
       .catch(error => {
         console.log('eeee', error.response.data);
-        // if (
-        //   error.response.data.msg == 'User Doesnot Exist' ||
-        //   error.response.data.msg === 'User Doesnot Exist'
-        // ) {
-        //   showToast();
-        // }
+        if (
+          error.response.data.msg == 'User Doesnot Exist' ||
+          error.response.data.msg === 'User Doesnot Exist'
+        ) {
+          showToast();
+        }
       });
   };
 
