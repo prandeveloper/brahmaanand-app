@@ -35,7 +35,7 @@ const Setting = ({navigation}) => {
   //get User Api for name
   const getUser = async () => {
     axios
-      .get(`http://43.205.82.226:9000/user/getoneUser/${id}`)
+      .get(`http://3.7.173.138:9000/user/getoneUser/${id}`)
       .then(response => {
         console.log('name', response.data.data);
         const user = response.data.data;
@@ -192,6 +192,30 @@ const Setting = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => navigation.navigate('Blogs')}>
+            <View style={styles.eachSection}>
+              <Ionicons
+                name="logo-rss"
+                size={25}
+                color={'#FC9358'}
+                style={{marginLeft: 10}}
+              />
+              <Text style={styles.btntxt}>Latest Blogs</Text>
+            </View>
+            <View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={22}
+                color={'#000'}
+                style={{marginRight: 20}}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btn}

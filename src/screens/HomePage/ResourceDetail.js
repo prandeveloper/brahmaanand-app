@@ -58,7 +58,7 @@ const ResourceDetail = ({route, navigation}) => {
   // <========== Resource Detail =======>
   const getResourceDetail = () => {
     axios
-      .get(`http://43.205.82.226:9000/admin/getone_reslist/${id}`)
+      .get(`http://3.7.173.138:9000/admin/getone_reslist/${id}`)
       .then(response => {
         console.log(response.data.data);
         setItems(response.data.data);

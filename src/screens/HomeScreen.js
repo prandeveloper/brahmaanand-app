@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Image,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import BannerSlider from '../components/BannerSlider';
@@ -49,7 +50,7 @@ export default function HomeScreen({navigation}) {
   const getCategory = () => {
     setRefreshing(true);
     axios
-      .get(`http://43.205.82.226:9000/admin/getallCategory`)
+      .get(`http://3.7.173.138:9000/admin/getallCategory`)
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);
@@ -98,7 +99,7 @@ export default function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <CustomHeader title="Home" navigation={navigation} />
-      <ScrollView style={{padding: 10}}>
+      <ScrollView style={{padding: 10}} nestedScrollEnabled={true}>
         <Carousel
           data={sliderData}
           renderItem={renderBanner}
@@ -154,10 +155,10 @@ export default function HomeScreen({navigation}) {
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            itemDimension={130}
+            itemDimension={140}
             data={items.slice(0, 8)}
             style={styles.gridView}
-            // staticDimension={300}
+            //sstaticDimension={300}
             // fixed
             spacing={10}
             renderItem={({item}) => (
@@ -204,9 +205,7 @@ export default function HomeScreen({navigation}) {
         </View>
 
         {/* <=======Latest Blogs =========> */}
-        <View>
-          <BlogHome />
-        </View>
+        {/*   */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -222,18 +221,7 @@ const styles = StyleSheet.create({
     height: 55,
     paddingHorizontal: 10,
   },
-  searchText: {
-    color: '#FC9358',
-    fontSize: 18,
-    fontWeight: '700',
-    paddingVertical: 10,
-  },
-  searchInput: {
-    width: 320,
-    borderRadius: 20,
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
+
   title: {
     color: '#000',
     fontSize: 18,
@@ -250,19 +238,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  slider: {
-    width: 180,
-    height: 140,
-    marginHorizontal: 0,
-    borderRadius: 10,
-  },
-  sliderTitle: {
-    color: '#000',
-    marginHorizontal: 5,
-    fontWeight: '600',
-    margin: 10,
-  },
-  sliderImg: {
+
+  erImg: {
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
@@ -271,23 +248,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 5,
   },
-  blogMaster: {
-    flexDirection: 'row',
-    margin: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  blogMasterImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 30,
-  },
-  blogMasterText: {
-    color: '#000',
-    fontWeight: '600',
-    marginLeft: 10,
-    textTransform: 'capitalize',
-  },
+
   sliderHash: {
     backgroundColor: '#848482',
     alignItems: 'center',
@@ -300,18 +261,13 @@ const styles = StyleSheet.create({
   hashText: {
     color: '#fff',
   },
-  baner: {
-    width: 300,
-    height: 100,
-    marginHorizontal: 5,
-    borderRadius: 10,
-  },
+
   //grid View
   gridView: {
     flex: 1,
   },
   itemContainer: {
-    height: 170,
+    height: 160,
   },
   itemView: {
     backgroundColor: 'rgba(0,0,0,0.5)',

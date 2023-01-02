@@ -18,7 +18,7 @@ const SubCategory = ({route, navigation}) => {
 
   const getCategory = () => {
     axios
-      .get(`http://43.205.82.226:9000/admin/listbycategory/${id}`)
+      .get(`http://3.7.173.138:9000/admin/listbycategory/${id}`)
       .then(response => {
         //console.log(response.data.data);
         setItems(response.data.data);

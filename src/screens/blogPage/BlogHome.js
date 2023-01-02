@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
 
-const BlogHome = ({navigation}) => {
+export default function BlogHome() {
+  const navigation = useNavigation();
   const [blog, setBlog] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -22,7 +24,7 @@ const BlogHome = ({navigation}) => {
   const getBlogs = () => {
     setRefreshing(true);
     axios
-      .get(`http://43.205.82.226:9000/admin/getBlog`)
+      .get(`http://3.7.173.138:9000/admin/getBlog`)
       .then(response => {
         //console.log(response.data.data);
         setBlog(response.data.data);
@@ -72,9 +74,7 @@ const BlogHome = ({navigation}) => {
       </ScrollView>
     </View>
   );
-};
-
-export default BlogHome;
+}
 
 const styles = StyleSheet.create({
   title: {

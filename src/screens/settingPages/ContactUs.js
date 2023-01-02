@@ -25,7 +25,7 @@ const ContactUs = ({navigation}) => {
     {
       firstName !== '' && email !== '' && mobile !== '' && message !== ''
         ? axios
-            .post(`http://43.205.82.226:9000/user/add_contactus`, {
+            .post(`http://3.7.173.138:9000/user/add_contactus`, {
               userid: await AsyncStorage.getItem('userId'),
               name: firstName,
               email: email,

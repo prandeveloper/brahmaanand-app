@@ -19,7 +19,7 @@ export default function BlogDetail({route}) {
 
   const getBlogDetail = () => {
     axios
-      .get(`http://43.205.82.226:9000/admin/viewoneBlog/${id}`)
+      .get(`http://3.7.173.138:9000/admin/viewoneBlog/${id}`)
       .then(response => {
         console.log(response.data.data);
         setDetail(response.data.data);

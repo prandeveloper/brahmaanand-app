@@ -91,7 +91,7 @@ const SubmitResource = ({navigation}) => {
 
   const getCategory = () => {
     axios
-      .get(`http://43.205.82.226:9000/admin/getallCategory`)
+      .get(`http://3.7.173.138:9000/admin/getallCategory`)
       .then(response => {
         //console.log(response.data.data);
         setCatList(response.data.data);
@@ -103,7 +103,7 @@ const SubmitResource = ({navigation}) => {
   const getSubCategory = () => {
     // console.log(category);
     axios
-      .get(`http://43.205.82.226:9000/admin/listbycategory/${category}`)
+      .get(`http://3.7.173.138:9000/admin/listbycategory/${category}`)
       .then(response => {
         //   console.log(response.data.data);
         setSubCatList(response.data.data);
@@ -114,7 +114,7 @@ const SubmitResource = ({navigation}) => {
   };
   const getYear = () => {
     axios
-      .get(`http://43.205.82.226:9000/user/allYear`)
+      .get(`http://3.7.173.138:9000/user/allYear`)
       .then(response => {
         //console.log(response.data.data);
         setYearList(response.data.data);
@@ -125,7 +125,7 @@ const SubmitResource = ({navigation}) => {
   };
   const getLanguage = () => {
     axios
-      .get(`http://43.205.82.226:9000/user/allLang`)
+      .get(`http://3.7.173.138:9000/user/allLang`)
       .then(response => {
         //console.log(response.data.data);
         setLang(response.data.data);

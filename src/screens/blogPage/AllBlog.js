@@ -25,7 +25,7 @@ export default function AllBlog({navigation}) {
   const getBlogs = async () => {
     setRefreshing(true);
     axios
-      .get(`http://43.205.82.226:9000/admin/getBlog`)
+      .get(`http://3.7.173.138:9000/admin/getBlog`)
       .then(response => {
         //console.log(response.data.data);
         setBlog(response.data.data);

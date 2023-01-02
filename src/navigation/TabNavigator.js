@@ -23,7 +23,7 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#FC9358',
       }}>
       <Tab.Screen
-        name="Home"
+        name="HOME"
         component={HomeScreen}
         options={({route}) => ({
           tabBarStyle: {
@@ -36,7 +36,7 @@ const TabNavigator = () => {
         })}
       />
       <Tab.Screen
-        name="Search"
+        name="SEARCH"
         component={SearchPage}
         options={{
           // tabBarBadge: 3,
@@ -47,7 +47,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Submit Resource"
+        name="SUBMIT RESOURCE"
         component={SubmitResource}
         options={{
           // tabBarBadge: 3,
@@ -58,7 +58,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="LeaderBoard"
+        name="LEADERBOARD"
         component={LeaderBoard}
         options={{
           // tabBarBadge: 3,
@@ -69,7 +69,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Setting"
+        name="SETTING"
         component={Setting}
         options={{
           tabBarIcon: ({color, size}) => (

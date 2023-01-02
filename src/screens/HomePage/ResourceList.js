@@ -110,7 +110,7 @@ const ResourceList = ({route, navigation}) => {
   // <=========== Year ============>
   const getYear = () => {
     axios
-      .get(`http://43.205.82.226:9000/user/allYear`)
+      .get(`http://3.7.173.138:9000/user/allYear`)
       .then(response => {
         //console.log(response.data.data);
         setYearList(response.data.data);
@@ -123,7 +123,7 @@ const ResourceList = ({route, navigation}) => {
   // <=========== Language ============>
   const getLanguage = () => {
     axios
-      .get(`http://43.205.82.226:9000/user/allLang`)
+      .get(`http://3.7.173.138:9000/user/allLang`)
       .then(response => {
         //console.log(response.data.data);
         setLangList(response.data.data);
@@ -155,7 +155,7 @@ const ResourceList = ({route, navigation}) => {
       selectYear === ''
     ) {
       axios
-        .get(`http://43.205.82.226:9000/admin/listbysubcategory/${id}`)
+        .get(`http://3.7.173.138:9000/admin/listbysubcategory/${id}`)
         .then(response => {
           //console.log(response.data.data);
           setItems(response.data.data);
