@@ -33,6 +33,10 @@ import PromotionList from '../screens/HomePage/PromotionList';
 import Bookmark from '../screens/settingPages/Bookmark';
 import SearchPage from '../screens/SearchPage';
 import BlogHome from '../screens/blogPage/BlogHome';
+import EnterEmail from '../screens/forgot/EnterEmail';
+import NewPassword from '../screens/forgot/NewPassword';
+import FeaturedContent from '../screens/HomePage/FeaturedContent';
+import HashtagList from '../screens/HomePage/HashtagList';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -99,6 +103,16 @@ const HomeStack = () => {
       <Stack.Screen
         name="All Review"
         component={ReviewList}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Top Hashtag"
+        component={HashtagList}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Featured Content"
+        component={FeaturedContent}
         options={{headerShown: true}}
       />
       <Stack.Screen
@@ -175,6 +189,16 @@ const HomeStack = () => {
         options={({route}) => ({
           title: route.params?.title,
         })}
+      />
+      <Stack.Screen
+        name="EnterEmail"
+        component={EnterEmail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewPassword"
+        component={NewPassword}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

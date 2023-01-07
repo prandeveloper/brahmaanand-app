@@ -192,10 +192,11 @@ const Setting = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
+
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => navigation.navigate('Blogs')}>
+            onPress={() => navigation.navigate('Featured Content')}>
             <View style={styles.eachSection}>
               <Ionicons
                 name="logo-rss"
@@ -203,7 +204,7 @@ const Setting = ({navigation}) => {
                 color={'#FC9358'}
                 style={{marginLeft: 10}}
               />
-              <Text style={styles.btntxt}>Latest Blogs</Text>
+              <Text style={styles.btntxt}>Featured Content</Text>
             </View>
             <View>
               <Ionicons
@@ -241,6 +242,7 @@ const Setting = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
+
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.btn}

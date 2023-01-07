@@ -120,13 +120,27 @@ const LoginScreen = ({navigation}) => {
             value={password}
             onChangeText={setPassword}
           />
-          <TouchableOpacity
-            style={{padding: 4}}
-            onPress={() => {
-              setPasswordSecured(!passwordSecured);
-            }}>
-            <Text style={{color: 'blue'}}>Show Password</Text>
-          </TouchableOpacity>
+        </View>
+
+        {/* Show and Forgot Password */}
+
+        <View style={styles.showForgotMainView}>
+          <View style={styles.showView}>
+            <TouchableOpacity
+              style={{padding: 4}}
+              onPress={() => {
+                setPasswordSecured(!passwordSecured);
+              }}>
+              <Text style={{color: 'blue'}}>Show Password</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.forgotView}>
+            <TouchableOpacity
+              style={{padding: 4}}
+              onPress={() => navigation.navigate('EnterEmail')}>
+              <Text style={{color: 'red'}}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <CustomButton label={'LOGIN'} onPress={signIn} />
@@ -151,6 +165,18 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   inputField: {
-    marginVertical: 10,
+    marginVertical: 5,
+  },
+  //  Show and Forgot Password
+  showForgotMainView: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  showView: {
+    flex: 1,
+  },
+  forgotView: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
 });

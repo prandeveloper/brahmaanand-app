@@ -17,27 +17,7 @@ import mercury from '../../assets/images/planet/mercury.png';
 const KarmaCurrent = () => {
   const [items, setItems] = useState([]);
   const [allTime, setAllTime] = useState([]);
-  const [planet, setPlanet] = useState([
-    {
-      imageUrl: require('../../assets/images/planet/sun.png'),
-    },
 
-    {
-      imageUrl: require('../../assets/images/planet/mercury.png'),
-    },
-    {
-      imageUrl: require('../../assets/images/planet/venus.png'),
-    },
-    {
-      imageUrl: require('../../assets/images/planet/mars.png'),
-    },
-    {
-      imageUrl: require('../../assets/images/planet/jupiter.png'),
-    },
-    {
-      imageUrl: require('../../assets/images/planet/saturn.png'),
-    },
-  ]);
   const getCurrentKarma = () => {
     axios
       .get(`http://3.7.173.138:9000/user/karma_crrnt_month`)
@@ -114,7 +94,10 @@ const KarmaCurrent = () => {
             <View style={styles.innerView}>
               <View style={styles.iconView}>
                 <View style={styles.iconView1}>
-                  <Image source={item.imageUrl} style={styles.planetImage} />
+                  <Image
+                    source={{uri: `${item.planetImg}`}}
+                    style={styles.planetImage}
+                  />
                 </View>
                 <View style={styles.iconView2}>
                   <Text style={styles.iconNum}>{item?.meteors}</Text>
@@ -122,13 +105,13 @@ const KarmaCurrent = () => {
               </View>
               <View style={styles.bgImageView}>
                 <ImageBackground
-                  source={{uri: `${item.userid?.profileImg}`}}
+                  source={{uri: `${item.profileImg}`}}
                   style={styles.bgImage}
                   imageStyle={{borderRadius: 50}}></ImageBackground>
               </View>
               <View>
-                <Text style={styles.upperText}>{item.userid?.username}</Text>
-                <Text style={styles.lowerText}>{item.userid?.meteors}</Text>
+                <Text style={styles.upperText}>{item.username}</Text>
+                <Text style={styles.lowerText}>{item.meteors}</Text>
               </View>
             </View>
           )}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -17,30 +17,16 @@ import {sliderData} from '../model/data';
 import CustomHeader from '../components/CustomHeader';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
-import YoutubePlayer from 'react-native-youtube-iframe';
 import BlogHome from './blogPage/BlogHome';
+import HashtagList from './HomePage/HashtagList';
 
 export default function HomeScreen({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const [items, setItems] = useState([]);
-  const [content, setContent] = useState([]);
-  const [playing, setPlaying] = useState(false);
-  const [hashTag, setHashTag] = useState([]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-  }, []);
-
-  const onStateChange = useCallback(state => {
-    if (state === 'ended') {
-      setPlaying(false);
-      Alert.alert('video has finished playing!');
-    }
-  }, []);
-
-  const togglePlaying = useCallback(() => {
-    setPlaying(prev => !prev);
   }, []);
 
   const renderBanner = ({item, index}) => {
@@ -61,45 +47,14 @@ export default function HomeScreen({navigation}) {
       });
   };
 
-  const getFeaturedContent = () => {
-    setRefreshing(true);
-    axios
-      .get(`http://3.7.173.138:9000/admin/admin_featured_cnt`)
-      .then(response => {
-        //console.log(response.data.data);
-        setContent(response.data.data);
-        setRefreshing(false);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const getHashtag = () => {
-    setRefreshing(true);
-
-    axios
-      .get(`http://3.7.173.138:9000/admin/getTrending`)
-      .then(response => {
-        //console.log(response.data.data);
-        setHashTag(response.data.data);
-        setRefreshing(false);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     getCategory();
-    getFeaturedContent();
-    getHashtag();
   }, []);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <CustomHeader title="Home" navigation={navigation} />
-      <ScrollView style={{padding: 10}} nestedScrollEnabled={true}>
+      <ScrollView style={{margin: 5}}>
         <Carousel
           data={sliderData}
           renderItem={renderBanner}
@@ -109,7 +64,7 @@ export default function HomeScreen({navigation}) {
           autoplay={true}
         />
         {/* <======= Search =========> */}
-        <View style={{paddingVertical: 20}}>
+        <View style={{marginVertical: 20}}>
           <TouchableOpacity
             style={styles.searchMain}
             onPress={() => navigation.navigate('Search')}>
@@ -118,33 +73,11 @@ export default function HomeScreen({navigation}) {
         </View>
 
         {/* <=======HashTag=========> */}
-        <View style={{paddingVertical: 20}}>
-          <View style={styles.topHeding}>
-            <Text style={styles.title}>Popular Searches</Text>
-            {/* <TouchableOpacity>
-              <Text style={styles.viewAll}>See All</Text>
-            </TouchableOpacity> */}
-          </View>
-          <ScrollView
-            horizontal={true}
-            style={{flexDirection: 'row'}}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
-            {hashTag?.map(hash => (
-              <View style={styles.sliderHash} key={hash?._id}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('Resource List', {name: hash?.topics})
-                  }>
-                  <Text style={styles.hashText}>#{hash?.topics}</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </ScrollView>
+        <View>
+          <HashtagList />
         </View>
         {/* <=======Top Category =========> */}
-        <View style={{paddingVertical: 10}}>
+        <View style={{marginVertical: 20}}>
           <View style={styles.topHeding}>
             <Text style={styles.title}>Top Category</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Category')}>
@@ -159,7 +92,7 @@ export default function HomeScreen({navigation}) {
             data={items.slice(0, 8)}
             style={styles.gridView}
             //sstaticDimension={300}
-            // fixed
+            //fixed
             spacing={10}
             renderItem={({item}) => (
               <TouchableOpacity
@@ -178,34 +111,11 @@ export default function HomeScreen({navigation}) {
             )}
           />
         </View>
-        {/* <=======Featured Content =========> */}
-        <View style={{paddingVertical: 20}}>
-          <View style={styles.topHeding}>
-            <Text style={styles.title}>Featured Content</Text>
-          </View>
-          <ScrollView
-            horizontal={true}
-            style={{flexDirection: 'row'}}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
-            {content?.map(video => (
-              <View style={styles.featureStyle} key={video._id}>
-                <YoutubePlayer
-                  width={280}
-                  height={250}
-                  play={playing}
-                  videoId={video.video_link}
-                  onChangeState={onStateChange}
-                  autoplay={false}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        </View>
 
         {/* <=======Latest Blogs =========> */}
-        {/*   */}
+        <View>
+          <BlogHome />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -221,7 +131,6 @@ const styles = StyleSheet.create({
     height: 55,
     paddingHorizontal: 10,
   },
-
   title: {
     color: '#000',
     fontSize: 18,
@@ -232,13 +141,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
-
   topHeding: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-
   erImg: {
     backgroundColor: 'white',
     alignItems: 'center',
@@ -248,7 +155,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 5,
   },
-
   sliderHash: {
     backgroundColor: '#848482',
     alignItems: 'center',
@@ -261,7 +167,6 @@ const styles = StyleSheet.create({
   hashText: {
     color: '#fff',
   },
-
   //grid View
   gridView: {
     flex: 1,
