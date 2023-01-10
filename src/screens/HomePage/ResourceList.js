@@ -13,7 +13,6 @@ import {
 import React, {useState, useEffect} from 'react';
 import {FlatGrid} from 'react-native-super-grid';
 import axios from 'axios';
-import {Searchbar} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from 'react-native-slider';
 import {CheckBox} from 'react-native-elements';
@@ -39,59 +38,31 @@ const ResourceList = ({route, navigation}) => {
   const [langList, setLangList] = useState([]);
   const [hashtag, setHashtag] = useState([]);
 
-  //console.log(type);
-  // console.log(format);
-
   // <=========== Filter Api ============>
+  // console.log(seekbarValue);
+  console.log(type);
+  console.log(format);
+  console.log(selectedLanguage);
+  console.log(selectYear);
   const getType = () => {
     axios
-      .get(`http://3.7.173.138:9000/user/filter_type/${id}/${type}`)
-      .then(response => {
-        //console.log(response.data.data);
-        setItems(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const getFormat = () => {
-    axios
-      .get(`http://3.7.173.138:9000/user/filterbyFormat/${id}/${format}`)
-      .then(response => {
-        //console.log(response.data.data);
-        setItems(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  console.log(selectYear);
-  const getYeardata = () => {
-    axios
-      .get(`http://3.7.173.138:9000/user/filterbyyear/${id}/${selectYear}`)
-      .then(response => {
-        console.log('year', response.data.data);
-        setItems(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-  console.log(selectedLanguage);
-  const getFilterLanguage = () => {
-    axios
-      .get(
-        `http://3.7.173.138:9000/user/filterbyLanguage/${id}/${selectedLanguage}`,
+      .post(
+        `http://3.7.173.138:9000/user/advancefilter?sub_category=${id}&type=${type}&format=${format}&language=${selectedLanguage}&relYear=${selectYear}`,
       )
       .then(response => {
-        console.log(response.data.data);
+        console.log('@@@@', response.data);
         setItems(response.data.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log('error', error);
       });
+  };
+
+  const clearFilter = () => {
+    setType('');
+    setFormat('');
+    setSelectYear('');
+    setSelectedLanguage('');
   };
 
   // <=========== Promotion ============>
@@ -168,9 +139,6 @@ const ResourceList = ({route, navigation}) => {
     getYear();
     getLanguage();
     getType();
-    getFormat();
-    getYeardata();
-    getFilterLanguage();
     getHashTag();
   }, [type, format, selectYear, selectedLanguage]);
 
@@ -308,19 +276,19 @@ const ResourceList = ({route, navigation}) => {
                   <View style={styles.shippingItemsView}>
                     <View style={styles.radioView}>
                       <RadioButton
-                        value="text"
+                        value="Text"
                         color="red"
-                        status={format === 'text' ? 'checked' : 'unchecked'}
-                        onPress={() => setFormat('text')}
+                        status={format === 'Text' ? 'checked' : 'unchecked'}
+                        onPress={() => setFormat('Text')}
                       />
                       <Text style={styles.radioLabelText}>Text</Text>
                     </View>
                     <View style={styles.radioView}>
                       <RadioButton
-                        value="video"
+                        value="Video"
                         color="red"
-                        status={format === 'video' ? 'checked' : 'unchecked'}
-                        onPress={() => setFormat('video')}
+                        status={format === 'Video' ? 'checked' : 'unchecked'}
+                        onPress={() => setFormat('Video')}
                       />
                       <Text style={styles.radioLabelText}>Video</Text>
                     </View>
@@ -367,11 +335,18 @@ const ResourceList = ({route, navigation}) => {
                   </Picker>
                 </View>
               </View>
-              <TouchableOpacity
-                style={styles.applyTouch}
-                onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.applyText}>Apply</Text>
-              </TouchableOpacity>
+              <View style={styles.buttonView}>
+                <TouchableOpacity
+                  style={styles.applyTouch}
+                  onPress={clearFilter}>
+                  <Text style={styles.applyText}>Clear</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.applyTouch}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.applyText}>Apply</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -607,5 +582,9 @@ const styles = StyleSheet.create({
   radioLabelText: {
     color: '#000',
     fontWeight: '600',
+  },
+  buttonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
